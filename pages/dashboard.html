@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EcoTrack Admin Dashboard – Manage commercial clients, bin services, pickup schedules, and waste analytics from one central hub." />
+  <title>Dashboard – EcoTrack Waste Management</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="../assets/css/rtl.css" />
+
+  <style>
+    /* Dashboard-specific styles */
+    .notif-wrapper { position: relative; }
+    .notif-bell {
+      width: 40px; height: 40px; border-radius: var(--radius-full);
+      border: 1px solid var(--border-color); background: var(--bg-tertiary);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--text-secondary); transition: var(--transition); position: relative;
+    }
+    .notif-bell:hover { color: var(--primary); }
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--danger); color: #fff;
+      font-size: 0.65rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .notif-panel {
+      position: absolute; top: 50px; right: 0; width: 340px;
+      background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
+      z-index: 200; display: none;
+    }
+    .notif-panel.open { display: block; }
+    .notif-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .notif-header h4 { font-size: 0.95rem; }
+    .mark-all-read { font-size: 0.8rem; color: var(--primary); cursor: pointer; background: none; border: none; font-family: var(--font-primary); }
+    .notif-list { padding: 8px; max-height: 320px; overflow-y: auto; }
+    .notif-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px; border-radius: var(--radius-sm);
+      transition: var(--transition); cursor: pointer;
+    }
+    .notif-item:hover { background: var(--bg-tertiary); }
+    .notif-item.unread { background: rgba(22,163,74,0.05); }
+    .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); margin-top: 6px; flex-shrink: 0; }
+    .notif-dot.read { background: var(--border-color); }
+    .notif-body .title { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+    .notif-body .time { font-size: 0.775rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Dashboard cards grid */
+    .dash-grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .dash-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+    .dash-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+
+    .dash-card-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+    }
+    .dash-card-title { font-size: 1rem; font-weight: 700; }
+
+    /* Activity feed */
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid var(--border-light);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .activity-icon.green { background: #dcfce7; color: var(--primary); }
+    .activity-icon.blue { background: #dbeafe; color: #2563eb; }
+    .activity-icon.amber { background: #fef3c7; color: #d97706; }
+    .activity-icon.red { background: #fee2e2; color: #dc2626; }
+    .activity-body .title { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+    .activity-body .desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    .activity-time { margin-left: auto; font-size: 0.775rem; color: var(--text-muted); flex-shrink: 0; }
+
+    /* Calendar styles */
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .cal-header h4 { font-size: 0.95rem; font-weight: 700; }
+    .cal-nav { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: var(--transition); }
+    .cal-nav:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-day-name { text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 4px; }
+    .cal-cell {
+      text-align: center; padding: 6px 2px; border-radius: var(--radius-sm);
+      font-size: 0.8rem; cursor: pointer; transition: var(--transition); position: relative;
+      color: var(--text-secondary);
+    }
+    .cal-cell:hover { background: var(--bg-secondary); color: var(--primary); }
+    .cal-cell.today { background: var(--primary); color: #fff; font-weight: 700; }
+    .cal-cell.has-event { color: var(--primary); font-weight: 600; }
+    .cal-cell.empty { cursor: default; }
+    .cal-dot { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+    .cal-cell.today .cal-dot { background: #fff; }
+
+    /* Recycle progress ring */
+    .progress-rings { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ring-item { text-align: center; }
+    .ring-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px; font-weight: 500; }
+
+    /* Route map placeholder */
+    .route-map {
+      height: 220px; background: var(--bg-secondary); border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); flex-direction: column; gap: 8px; border: 1px dashed var(--border-color);
+    }
+    .route-map i { font-size: 2rem; color: var(--primary); }
+    .route-map p { font-size: 0.85rem; }
+
+    /* Top clients */
+    .client-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border-light);
+    }
+    .client-row:last-child { border-bottom: none; }
+    .client-avatar {
+      width: 38px; height: 38px; border-radius: var(--radius-sm);
+      background: var(--bg-secondary); display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--primary); flex-shrink: 0;
+    }
+    .client-row-name { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+    .client-row-detail { font-size: 0.775rem; color: var(--text-muted); }
+    .client-row-value { margin-left: auto; font-size: 0.875rem; font-weight: 700; color: var(--text-primary); }
+
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4); z-index: 99;
+    }
+    .sidebar-overlay.visible { display: block; }
+
+    @media (max-width: 1280px) {
+      .dash-grid-2 { grid-template-columns: 1fr; }
+      .dash-grid-3 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .stats-cards { grid-template-columns: 1fr 1fr; }
+      .dash-grid-3 { grid-template-columns: 1fr; }
+      .progress-rings { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar-inner">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="sidebar-toggle btn btn-icon" aria-label="Toggle sidebar" style="border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-secondary)">
+          <i class="fas fa-bars"></i>
+        </button>
+        <a href="../index.html" class="navbar-logo">
+          <div class="logo-icon">♻</div>
+          <div class="logo-text">
+            <span class="logo-name">EcoTrack</span>
+            <span class="logo-tagline" style="color:var(--danger);font-weight:700">⚡ Admin Panel</span>
+          </div>
+        </a>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;margin-left:auto">
+        <div style="position:relative">
+          <input type="text" placeholder="Search..." style="padding:9px 16px 9px 36px;border:1.5px solid var(--border-color);border-radius:var(--radius-md);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.875rem;width:220px;font-family:var(--font-primary)" />
+          <i class="fas fa-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.8rem"></i>
+        </div>
+
+        <div class="notif-wrapper">
+          <button class="notif-bell" aria-label="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="notif-badge">3</span>
+          </button>
+          <div class="notif-panel" role="dialog" aria-label="Notifications panel">
+            <div class="notif-header">
+              <h4>Notifications</h4>
+              <button class="mark-all-read">Mark all read</button>
+            </div>
+            <div class="notif-list">
+              <div class="notif-item unread">
+                <div class="notif-dot"></div>
+                <div class="notif-body">
+                  <div class="title">Bin overflow alert – Metro Mall Zone 3</div>
+                  <div class="time">2 minutes ago</div>
+                </div>
+              </div>
+              <div class="notif-item unread">
+                <div class="notif-dot"></div>
+                <div class="notif-body">
+                  <div class="title">Pickup confirmed – GrandStay Hotels</div>
+                  <div class="time">45 minutes ago</div>
+                </div>
+              </div>
+              <div class="notif-item unread">
+                <div class="notif-dot"></div>
+                <div class="notif-body">
+                  <div class="title">New service request from TechForge Ind.</div>
+                  <div class="time">2 hours ago</div>
+                </div>
+              </div>
+              <div class="notif-item">
+                <div class="notif-dot read"></div>
+                <div class="notif-body">
+                  <div class="title">Monthly report generated – February 2026</div>
+                  <div class="time">1 day ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+
+        <button class="rtl-toggle" title="Toggle RTL layout" aria-label="Toggle right-to-left layout" style="margin-right:4px">RTL</button>
+
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--bg-secondary);border-radius:var(--radius-full);border:1.5px solid var(--danger);cursor:pointer">
+          <img src="https://i.pravatar.cc/32?img=5" alt="Admin" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--danger)" />
+          <div style="line-height:1.2">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--text-primary)">Admin User</div>
+            <div style="font-size:0.7rem;color:var(--danger);font-weight:600">Administrator</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" role="navigation" aria-label="Dashboard navigation">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Overview</div>
+        <a href="dashboard.html" class="sidebar-link active"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a href="analytics.html" class="sidebar-link"><i class="fas fa-chart-bar"></i> Analytics</a>
+        <a href="schedule.html" class="sidebar-link"><i class="fas fa-calendar-alt"></i> Schedules <span class="sidebar-badge">5</span></a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Management</div>
+        <a href="#" class="sidebar-link"><i class="fas fa-users"></i> Clients <span class="sidebar-badge">2500</span></a>
+        <a href="#" class="sidebar-link"><i class="fas fa-truck"></i> Fleet</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-trash"></i> Bin Inventory</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-route"></i> Routes</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Reports</div>
+        <a href="analytics.html" class="sidebar-link"><i class="fas fa-file-chart-bar"></i> Waste Reports</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-certificate"></i> Recycling Certs</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-dollar-sign"></i> Billing</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">System</div>
+        <a href="#" class="sidebar-link"><i class="fas fa-bell"></i> Alerts <span class="sidebar-badge">3</span></a>
+        <a href="#" class="sidebar-link"><i class="fas fa-cog"></i> Settings</a>
+        <a href="../index.html" class="sidebar-link"><i class="fas fa-home"></i> Back to Site</a>
+          <a href="../pages/login.html" class="sidebar-link" style="color:var(--danger)" onclick="return confirmLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main" aria-label="Dashboard main content">
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <span style="background:var(--danger);color:#fff;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:var(--radius-full);letter-spacing:0.5px">ADMIN</span>
+          </div>
+          <div class="dashboard-title">Good morning, Admin! 👋</div>
+          <div class="dashboard-subtitle">Here's what's happening across your operations today – March 23, 2026</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="user-dashboard.html" class="btn btn-sm" style="border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-secondary)">
+            <i class="fas fa-user"></i> User Dashboard
+          </a>
+          <a href="analytics.html" class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Export Report</a>
+          <a href="schedule.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Pickup</a>
+        </div>
+      </div>
+
+      <!-- Stats cards row -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value" data-count="2547" data-suffix="">0</div>
+              <div class="stat-card-label">Active Clients</div>
+              <div class="stat-card-trend up"><i class="fas fa-arrow-up"></i> +24 this month</div>
+            </div>
+            <div class="stat-card-icon green"><i class="fas fa-users"></i></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">47</div>
+              <div class="stat-card-label">Pickups Today</div>
+              <div class="stat-card-trend up"><i class="fas fa-arrow-up"></i> 38 completed</div>
+            </div>
+            <div class="stat-card-icon blue"><i class="fas fa-truck"></i></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">12.4T</div>
+              <div class="stat-card-label">Waste Collected (today)</div>
+              <div class="stat-card-trend up"><i class="fas fa-arrow-up"></i> 94% diverted</div>
+            </div>
+            <div class="stat-card-icon green"><i class="fas fa-recycle"></i></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">3</div>
+              <div class="stat-card-label">Active Alerts</div>
+              <div class="stat-card-trend down"><i class="fas fa-arrow-down"></i> 2 overflow bins</div>
+            </div>
+            <div class="stat-card-icon red"><i class="fas fa-exclamation-circle"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row: Chart + Calendar -->
+      <div class="dash-grid-2">
+        <!-- Pickup Trend Chart -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Pickup Trends (Last 12 Months)</h3>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-sm btn-secondary" style="padding:6px 12px;font-size:0.78rem">Monthly</button>
+              <button class="btn btn-sm" style="padding:6px 12px;font-size:0.78rem;border:1px solid var(--border-color);border-radius:var(--radius-md);background:var(--bg-tertiary);color:var(--text-secondary)">Weekly</button>
+            </div>
+          </div>
+          <div style="position:relative;height:220px">
+            <canvas data-sparkline="310,285,340,365,390,410,380,425,450,465,480,520" data-color="#16a34a" width="600" height="220" style="width:100%;height:220px" aria-label="Pickup trend chart"></canvas>
+          </div>
+          <div style="display:flex;gap:24px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light)">
+            <div><div style="font-size:1.4rem;font-weight:800;color:var(--text-primary)">520</div><div style="font-size:0.78rem;color:var(--text-muted)">This Month</div></div>
+            <div><div style="font-size:1.4rem;font-weight:800;color:var(--success)">+8.3%</div><div style="font-size:0.78rem;color:var(--text-muted)">vs Last Month</div></div>
+            <div><div style="font-size:1.4rem;font-weight:800;color:var(--info)">4,620</div><div style="font-size:0.78rem;color:var(--text-muted)">Year to Date</div></div>
+          </div>
+        </div>
+
+        <!-- Pickup Calendar -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Pickup Calendar</h3>
+            <a href="schedule.html" class="btn btn-sm btn-primary" style="padding:6px 12px;font-size:0.78rem">View All</a>
+          </div>
+          <div id="pickup-calendar"></div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-light);display:flex;gap:16px;font-size:0.78rem">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Scheduled Pickup</span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--primary)"></span> Today</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row: Recycling rates + Activity + Top clients -->
+      <div class="dash-grid-3">
+        <!-- Recycling Rates -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Recycling Rates</h3>
+          </div>
+          <div class="progress-rings">
+            <div class="ring-item">
+              <canvas data-donut="82" data-color="#16a34a" width="90" height="90" aria-label="Paper recycling 82%"></canvas>
+              <div class="ring-label">Paper</div>
+            </div>
+            <div class="ring-item">
+              <canvas data-donut="74" data-color="#0f766e" width="90" height="90" aria-label="Plastic recycling 74%"></canvas>
+              <div class="ring-label">Plastic</div>
+            </div>
+            <div class="ring-item">
+              <canvas data-donut="96" data-color="#16a34a" width="90" height="90" aria-label="Metal recycling 96%"></canvas>
+              <div class="ring-label">Metal</div>
+            </div>
+            <div class="ring-item">
+              <canvas data-donut="68" data-color="#f59e0b" width="90" height="90" aria-label="Glass recycling 68%"></canvas>
+              <div class="ring-label">Glass</div>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.85rem">
+              <span style="color:var(--text-secondary)">Overall diversion rate</span>
+              <span style="font-weight:700;color:var(--primary)">94%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" data-width="94%"></div></div>
+          </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Recent Activity</h3>
+            <button style="background:none;border:none;font-size:0.8rem;color:var(--primary);cursor:pointer;font-family:var(--font-primary)">View All</button>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon green"><i class="fas fa-check"></i></div>
+              <div class="activity-body">
+                <div class="title">Pickup completed</div>
+                <div class="desc">GrandStay Hotels – 3 bins – 480kg</div>
+              </div>
+              <span class="activity-time">8:42 AM</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon red"><i class="fas fa-exclamation"></i></div>
+              <div class="activity-body">
+                <div class="title">Overflow alert triggered</div>
+                <div class="desc">Metro Mall Zone 3 – 95% capacity</div>
+              </div>
+              <span class="activity-time">8:15 AM</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon blue"><i class="fas fa-user-plus"></i></div>
+              <div class="activity-body">
+                <div class="title">New client registered</div>
+                <div class="desc">Apex Construction Co.</div>
+              </div>
+              <span class="activity-time">7:58 AM</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon amber"><i class="fas fa-truck"></i></div>
+              <div class="activity-body">
+                <div class="title">Route assigned</div>
+                <div class="desc">Route R-042 → Driver Mike Turner</div>
+              </div>
+              <span class="activity-time">7:30 AM</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon green"><i class="fas fa-file-alt"></i></div>
+              <div class="activity-body">
+                <div class="title">Recycling cert issued</div>
+                <div class="desc">CityMed Hospital – Feb 2026</div>
+              </div>
+              <span class="activity-time">Yesterday</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Clients -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Top Clients</h3>
+            <button style="background:none;border:none;font-size:0.8rem;color:var(--primary);cursor:pointer;font-family:var(--font-primary)">All Clients</button>
+          </div>
+          <div>
+            <div class="client-row">
+              <div class="client-avatar"><i class="fas fa-hotel"></i></div>
+              <div>
+                <div class="client-row-name">GrandStay Hotels</div>
+                <div class="client-row-detail">Enterprise · 24 bins</div>
+              </div>
+              <div class="client-row-value">$3,200/mo</div>
+            </div>
+            <div class="client-row">
+              <div class="client-avatar"><i class="fas fa-shopping-bag"></i></div>
+              <div>
+                <div class="client-row-name">Metro Mall Group</div>
+                <div class="client-row-detail">Business · 18 bins</div>
+              </div>
+              <div class="client-row-value">$2,100/mo</div>
+            </div>
+            <div class="client-row">
+              <div class="client-avatar"><i class="fas fa-hospital"></i></div>
+              <div>
+                <div class="client-row-name">CityMed Hospital</div>
+                <div class="client-row-detail">Enterprise · 31 bins</div>
+              </div>
+              <div class="client-row-value">$4,800/mo</div>
+            </div>
+            <div class="client-row">
+              <div class="client-avatar"><i class="fas fa-industry"></i></div>
+              <div>
+                <div class="client-row-name">TechForge Industries</div>
+                <div class="client-row-detail">Business · 12 bins</div>
+              </div>
+              <div class="client-row-value">$1,560/mo</div>
+            </div>
+            <div class="client-row">
+              <div class="client-avatar"><i class="fas fa-university"></i></div>
+              <div>
+                <div class="client-row-name">State University</div>
+                <div class="client-row-detail">Enterprise · 42 bins</div>
+              </div>
+              <div class="client-row-value">$5,400/mo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clients Table -->
+      <div class="data-table-wrapper" style="margin-bottom:24px">
+        <div class="data-table-header">
+          <h3 class="data-table-title">Client Management</h3>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <div class="search-input-wrapper">
+              <i class="fas fa-search"></i>
+              <input type="text" class="search-input" placeholder="Search clients..." data-table-search="clients-table" aria-label="Search clients" />
+            </div>
+            <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Client</button>
+          </div>
+        </div>
+        <table class="data-table" id="clients-table" aria-label="Client management table">
+          <thead>
+            <tr>
+              <th data-sort>Client Name</th>
+              <th data-sort>Plan</th>
+              <th data-sort>Bins</th>
+              <th data-sort>Next Pickup</th>
+              <th>Status</th>
+              <th>Recycling Rate</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div style="font-weight:600;color:var(--text-primary)">GrandStay Hotels</div><div style="font-size:0.78rem;color:var(--text-muted)">24 bins · Sydney</div></td>
+              <td><span class="badge" style="background:#dcfce7;color:#15803d;font-size:0.75rem">Enterprise</span></td>
+              <td>24</td>
+              <td>Mar 14, 2026</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td><div class="progress-bar" style="width:100px"><div class="progress-fill" data-width="89%"></div></div><span style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;display:block">89%</span></td>
+              <td style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn btn-sm" style="padding:6px 10px;border:1px solid var(--border-color);background:var(--bg-tertiary);border-radius:var(--radius-sm);font-size:0.78rem;cursor:pointer"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-sm" style="padding:6px 10px;border:1px solid var(--primary);color:var(--primary);background:transparent;border-radius:var(--radius-sm);font-size:0.78rem;cursor:pointer"><i class="fas fa-edit"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:600;color:var(--text-primary)">Metro Mall Group</div><div style="font-size:0.78rem;color:var(--text-muted)">18 bins · Melbourne</div></td>
+              <td><span class="badge" style="background:#dbeafe;color:#1d4ed8;font-size:0.75rem">Business</span></td>
+              <td>18</td>
+              <td>Mar 16, 2026</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td><div class="progress-bar" style="width:100px"><div class="progress-fill" data-width="76%" style="background:linear-gradient(90deg,#3b82f6,#0f766e)"></div></div><span style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;display:block">76%</span></td>
+              <td style="display:flex;gap:6px">
+                <button class="btn btn-sm" style="padding:6px 10px;border:1px solid var(--border-color);background:var(--bg-tertiary);border-radius:var(--radius-sm);font-size:0.78rem;cursor:pointer"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-sm" style="padding:6px 10px;border:1px solid var(--primary);color:var(--primary);background:transparent;border-radius:var(--radius-sm);font-size:0.78rem;cursor:pointer"><i class="fas fa-edit"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:600;color:var(--text-primary)">CityMed Hospital</div><div style="font-size:0.78rem;color:var(--text-muted)">31 bins · Brisbane</div></td>
+              <td><span class="badge" style="background:#dcfce7;color:#15803d;font-size:0.75rem">Enterprise</span></td>
+              <td>31</td>
+              <td>Mar 14, 2026</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td><div class="progress-bar" style="width:100px"><div class="progress-fill" data-width="92%"></div></div><span style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;display:block">92%</span></td>
+              <td style="display:flex;gap:6px">
+                <button class="btn btn-sm" style="padding:6px 10px;border:1px solid var(--border-color);background:var(--bg-tertiary);border-radius:var(--radius-sm);font-size:0.78rem;cursor:pointer"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-sm" style="padding:6px 10px;border:1px solid var(--primary);color:var(--primary);background:transparent;border-radius:var(--radius-sm);font-size:0.78rem;cursor:pointer"><i class="fas fa-edit"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:600;color:var(--text-primary)">Apex Construction Co.</div><div style="font-size:0.78rem;color:var(--text-muted)">5 bins · Sydney</div></td>
+              <td><span class="badge" style="background:#f8f9fa;color:#6c757d;font-size:0.75rem">Starter</span></td>
+              <td>5</td>
+              <td>Mar 20, 2026</td>
+              <td><span class="status-badge pending">Pending</span></td>
+              <td><div class="progress-bar" style="width:100px"><div class="progress-fill" data-width="54%" style="background:linear-gradient(90deg,#f59e0b,#d97706)"></div></div><span style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;display:block">54%</span></td>
+              <td style="display:flex;gap:6px">
+                <button class="btn btn-sm" style="padding:6px 10px;border:1px solid var(--border-color);background:var(--bg-tertiary);border-radius:var(--radius-sm);font-size:0.78rem;cursor:pointer"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-sm" style="padding:6px 10px;border:1px solid var(--primary);color:var(--primary);background:transparent;border-radius:var(--radius-sm);font-size:0.78rem;cursor:pointer"><i class="fas fa-edit"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Fleet status row -->
+      <div class="dash-grid-2" style="margin-bottom:0">
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Fleet Status</h3>
+            <span class="status-badge active">All Operational</span>
+          </div>
+          <div class="route-map">
+            <i class="fas fa-map-marked-alt"></i>
+            <p>Live fleet tracking — Google Maps API integration point</p>
+            <button class="btn btn-primary btn-sm" style="margin-top:4px"><i class="fas fa-external-link-alt"></i> Open Full Map</button>
+          </div>
+          <div style="margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center">
+            <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <div style="font-size:1.4rem;font-weight:800;color:var(--success)">14</div>
+              <div style="font-size:0.78rem;color:var(--text-muted)">On Route</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <div style="font-size:1.4rem;font-weight:800;color:var(--info)">3</div>
+              <div style="font-size:0.78rem;color:var(--text-muted)">At Depot</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <div style="font-size:1.4rem;font-weight:800;color:var(--warning)">1</div>
+              <div style="font-size:0.78rem;color:var(--text-muted)">Maintenance</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Upcoming Pickups</h3>
+            <a href="schedule.html" class="btn btn-sm btn-primary" style="padding:6px 12px;font-size:0.78rem">Manage</a>
+          </div>
+          <table class="data-table" id="pickups-table" aria-label="Upcoming pickups">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:600;font-size:0.85rem">GrandStay Hotels</td>
+                <td style="font-size:0.85rem">Mar 14</td>
+                <td><span class="status-badge active">Confirmed</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;font-size:0.85rem">CityMed Hospital</td>
+                <td style="font-size:0.85rem">Mar 14</td>
+                <td><span class="status-badge active">Confirmed</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;font-size:0.85rem">Metro Mall – Zone 3</td>
+                <td style="font-size:0.85rem">Mar 15</td>
+                <td><span class="status-badge pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;font-size:0.85rem">TechForge Industries</td>
+                <td style="font-size:0.85rem">Mar 16</td>
+                <td><span class="status-badge active">Confirmed</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;font-size:0.85rem">State University</td>
+                <td style="font-size:0.85rem">Mar 18</td>
+                <td><span class="status-badge completed">Scheduled</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <button class="scroll-top" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script>
+    function confirmLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        window.location.href = '../pages/login.html';
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>

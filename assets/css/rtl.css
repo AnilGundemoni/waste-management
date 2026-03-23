@@ -1,0 +1,329 @@
+/* ============================================================
+   ECOTRACK – RTL (Right-to-Left) Full Layout Support
+   Covers: Arabic, Hebrew, and other RTL languages.
+   Usage: Add  dir="rtl"  to the <html> element, e.g.:
+          <html lang="ar" dir="rtl">
+   ============================================================ */
+
+/* ── Base document ── */
+[dir="rtl"] body {
+  direction: rtl;
+  text-align: right;
+}
+
+/* ── RTL Language toggle button (optional, shown in navbar) ── */
+.rtl-toggle {
+  background: none;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.85);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s, background 0.2s;
+}
+.rtl-toggle:hover {
+  border-color: #86efac;
+  color: #86efac;
+  background: rgba(134,239,172,0.07);
+}
+
+/* ────────────────────────────────────────
+   1. NAVBAR
+   ──────────────────────────────────────── */
+[dir="rtl"] .navbar-inner        { flex-direction: row-reverse; }
+[dir="rtl"] .navbar-logo         { flex-direction: row-reverse; }
+[dir="rtl"] .nav-menu            { flex-direction: row-reverse; }
+[dir="rtl"] .navbar-actions      { flex-direction: row-reverse; }
+[dir="rtl"] .navbar .container.navbar-inner { direction: rtl; }
+[dir="rtl"] .nav-menu            { justify-content: flex-end; text-align: right; }
+[dir="rtl"] .navbar-actions      { margin-left: 0; margin-right: auto; }
+[dir="rtl"] .nav-link            { text-align: right; }
+
+/* Dropdown: open from right, translate back to centre */
+[dir="rtl"] .nav-dropdown-menu {
+  left: auto;
+  right: 50%;
+  transform: translateX(50%);
+}
+[dir="rtl"] .nav-dropdown:hover .nav-dropdown-menu,
+[dir="rtl"] .nav-dropdown:focus-within .nav-dropdown-menu {
+  transform: translateX(50%) translateY(0);
+}
+
+/* Mobile hamburger */
+[dir="rtl"] .hamburger { margin-left: 0; margin-right: 0.5rem; }
+
+/* ────────────────────────────────────────
+   2. HERO SECTION
+   ──────────────────────────────────────── */
+[dir="rtl"] .hero-content        { direction: rtl; text-align: right; }
+[dir="rtl"] .hero-cta            { flex-direction: row-reverse; justify-content: flex-end; }
+[dir="rtl"] .hero-stats          { flex-direction: row-reverse; }
+[dir="rtl"] .hero-stats-divider  { margin: 0 0.75rem; }
+
+/* Floating cards swap sides */
+[dir="rtl"] .hero-float-card.card-1 { left: auto; right: -32px; }
+[dir="rtl"] .hero-float-card.card-2 { right: auto; left: -24px; }
+
+/* ────────────────────────────────────────
+   3. SECTION / PAGE HEADERS & BREADCRUMBS
+   ──────────────────────────────────────── */
+[dir="rtl"] .section-header      { text-align: right; }
+[dir="rtl"] .section-badge       { flex-direction: row-reverse; }
+[dir="rtl"] .breadcrumb          { flex-direction: row-reverse; }
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before { margin: 0 0.4rem 0 0; content: "‹"; }
+
+/* ────────────────────────────────────────
+   4. FEATURES / CARDS GRID
+   ──────────────────────────────────────── */
+[dir="rtl"] .feature-card        { text-align: right; }
+[dir="rtl"] .feature-card-icon   { margin-left: auto; margin-right: 0; }
+[dir="rtl"] .feature-list li     { flex-direction: row-reverse; }
+[dir="rtl"] .feature-list li i   { margin-left: 0.5rem; margin-right: 0; }
+
+/* ────────────────────────────────────────
+   5. SERVICES
+   ──────────────────────────────────────── */
+[dir="rtl"] .service-card        { text-align: right; }
+[dir="rtl"] .service-tag         { left: auto; right: 16px; }
+[dir="rtl"] .service-meta        { flex-direction: row-reverse; }
+[dir="rtl"] .service-actions     { flex-direction: row-reverse; }
+
+/* ────────────────────────────────────────
+   6. HOW-IT-WORKS / PROCESS STEPS
+   ──────────────────────────────────────── */
+[dir="rtl"] .process-step        { text-align: right; }
+[dir="rtl"] .step-number         { margin-left: auto; margin-right: 0; }
+
+/* Connector line between steps (horizontal layout) */
+[dir="rtl"] .process-grid        { direction: rtl; }
+
+/* ────────────────────────────────────────
+   7. WHY-CHOOSE-US SECTION
+   ──────────────────────────────────────── */
+[dir="rtl"] .why-grid            { direction: rtl; }
+[dir="rtl"] .why-list            { padding-left: 0; padding-right: 0; }
+[dir="rtl"] .why-item            { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .why-item i          { margin-left: 0.75rem; margin-right: 0; }
+
+/* ────────────────────────────────────────
+   8. PRICING
+   ──────────────────────────────────────── */
+[dir="rtl"] .pricing-card        { text-align: right; }
+[dir="rtl"] .pricing-features    { padding-left: 0; padding-right: 0; }
+[dir="rtl"] .pricing-feature     { flex-direction: row-reverse; }
+[dir="rtl"] .pricing-feature i   { margin-left: 0.6rem; margin-right: 0; }
+[dir="rtl"] .pricing-badge       { left: auto; right: 1.25rem; }
+
+/* ────────────────────────────────────────
+   9. TESTIMONIALS
+   ──────────────────────────────────────── */
+[dir="rtl"] .testimonial-card    { text-align: right; direction: rtl; }
+[dir="rtl"] .testimonial-author  { flex-direction: row-reverse; }
+[dir="rtl"] .testimonial-author-info { text-align: right; }
+[dir="rtl"] .testimonial-stars   { justify-content: flex-end; }
+[dir="rtl"] .testimonial-quote-icon { right: auto; left: 1.25rem; }
+
+/* ────────────────────────────────────────
+   10. STATS COUNTERS
+   ──────────────────────────────────────── */
+[dir="rtl"] .stat-item           { text-align: right; }
+[dir="rtl"] .stats-grid          { direction: rtl; }
+
+/* ────────────────────────────────────────
+   11. ECO BANNER / BADGES
+   ──────────────────────────────────────── */
+[dir="rtl"] .eco-banner-stats    { flex-direction: row-reverse; }
+[dir="rtl"] .eco-stat-item       { text-align: right; }
+[dir="rtl"] .eco-stat-divider    { margin: 0 1rem; }
+
+/* ────────────────────────────────────────
+   12. IMAGE STRIP / GALLERY
+   ──────────────────────────────────────── */
+[dir="rtl"] .img-strip           { direction: rtl; }
+[dir="rtl"] .gallery-mosaic      { direction: rtl; }
+[dir="rtl"] .gallery-overlay     { text-align: right; }
+
+/* ────────────────────────────────────────
+   13. FOOTER
+   ──────────────────────────────────────── */
+[dir="rtl"] .footer-grid         { direction: rtl; }
+[dir="rtl"] .footer-brand        { text-align: right; }
+[dir="rtl"] .footer-col          { text-align: right; }
+[dir="rtl"] .footer-desc         { text-align: right; }
+
+/* Animated arrow on footer links */
+[dir="rtl"] .footer-links a:hover { padding-left: 0; padding-right: 4px; }
+
+/* Contact item icon spacing */
+[dir="rtl"] .footer-contact-item { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .footer-contact-item i { margin-left: 0.6rem; margin-right: 0; }
+
+/* Social links row */
+[dir="rtl"] .social-links        { flex-direction: row-reverse; justify-content: flex-end; }
+
+/* Footer bottom */
+[dir="rtl"] .footer-bottom       { flex-direction: row-reverse; }
+[dir="rtl"] .footer-bottom-links { flex-direction: row-reverse; }
+
+/* ────────────────────────────────────────
+   14. FORMS (Contact / Schedule / etc.)
+   ──────────────────────────────────────── */
+[dir="rtl"] .form-group          { text-align: right; }
+[dir="rtl"] .form-label          { text-align: right; display: block; }
+[dir="rtl"] .form-control        { text-align: right; direction: rtl; }
+[dir="rtl"] textarea.form-control { text-align: right; direction: rtl; }
+[dir="rtl"] select.form-control  { text-align: right; direction: rtl; }
+
+/* Checkbox / radio label ordering */
+[dir="rtl"] .form-check          { flex-direction: row-reverse; justify-content: flex-end; }
+[dir="rtl"] .form-check-input    { margin-left: 0.5rem; margin-right: 0; }
+
+/* Input icons (search, prefix icons) */
+[dir="rtl"] .input-with-icon     { direction: rtl; }
+[dir="rtl"] .input-icon-left     { left: auto; right: 12px; }
+[dir="rtl"] .input-icon-left + .form-control { padding-left: 12px; padding-right: 40px; }
+
+/* ────────────────────────────────────────
+   15. SCHEDULE WIZARD (pages/schedule.html)
+   ──────────────────────────────────────── */
+[dir="rtl"] .wizard-steps        { flex-direction: row-reverse; direction: rtl; }
+[dir="rtl"] .step-connector      { transform: scaleX(-1); }
+
+[dir="rtl"] .waste-type-grid     { direction: rtl; }
+[dir="rtl"] .waste-type-card     { text-align: right; }
+
+[dir="rtl"] .bin-size-item       { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .bin-size-info       { text-align: right; }
+[dir="rtl"] .bin-size-price      { margin-left: 0; margin-right: auto; }
+
+[dir="rtl"] .time-slots-grid     { direction: rtl; }
+
+[dir="rtl"] .review-row          { flex-direction: row-reverse; }
+[dir="rtl"] .review-label        { text-align: right; }
+[dir="rtl"] .review-value        { text-align: left; }
+
+[dir="rtl"] .summary-sidebar     { text-align: right; }
+[dir="rtl"] .summary-row         { flex-direction: row-reverse; }
+[dir="rtl"] .wizard-nav          { flex-direction: row-reverse; }
+
+[dir="rtl"] .trust-points        { text-align: right; }
+[dir="rtl"] .trust-item          { flex-direction: row-reverse; }
+[dir="rtl"] .trust-item i        { margin-left: 0.5rem; margin-right: 0; }
+
+/* ────────────────────────────────────────
+   16. BLOG PAGE (pages/blog.html)
+   ──────────────────────────────────────── */
+[dir="rtl"] .blog-layout         { direction: rtl; }
+[dir="rtl"] .blog-featured       { text-align: right; }
+[dir="rtl"] .blog-grid           { direction: rtl; }
+[dir="rtl"] .blog-card           { text-align: right; }
+[dir="rtl"] .blog-meta           { flex-direction: row-reverse; justify-content: flex-end; }
+[dir="rtl"] .blog-meta-item      { flex-direction: row-reverse; }
+[dir="rtl"] .blog-meta-item i    { margin-left: 0.3rem; margin-right: 0; }
+[dir="rtl"] .blog-tags           { flex-direction: row-reverse; justify-content: flex-end; }
+[dir="rtl"] .blog-sidebar        { text-align: right; }
+[dir="rtl"] .sidebar-post        { flex-direction: row-reverse; }
+[dir="rtl"] .sidebar-post-info   { text-align: right; }
+
+/* ────────────────────────────────────────
+   17. ABOUT PAGE (pages/about.html)
+   ──────────────────────────────────────── */
+[dir="rtl"] .about-grid          { direction: rtl; }
+[dir="rtl"] .about-content       { text-align: right; }
+[dir="rtl"] .team-card           { text-align: right; }
+[dir="rtl"] .value-item          { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .value-item i        { margin-left: 0.6rem; margin-right: 0; }
+[dir="rtl"] .mission-grid        { direction: rtl; }
+[dir="rtl"] .mission-text        { text-align: right; }
+[dir="rtl"] .achievement-item    { flex-direction: row-reverse; text-align: right; }
+
+/* ────────────────────────────────────────
+   18. CONTACT PAGE (pages/contact.html)
+   ──────────────────────────────────────── */
+[dir="rtl"] .contact-grid        { direction: rtl; }
+[dir="rtl"] .contact-info        { text-align: right; }
+[dir="rtl"] .contact-item        { flex-direction: row-reverse; }
+[dir="rtl"] .contact-item-icon   { margin-left: 1rem; margin-right: 0; }
+[dir="rtl"] .contact-item-text   { text-align: right; }
+
+/* ────────────────────────────────────────
+   19. SERVICES PAGE (pages/services.html)
+   ──────────────────────────────────────── */
+[dir="rtl"] .services-grid       { direction: rtl; }
+[dir="rtl"] .service-list-item   { flex-direction: row-reverse; }
+[dir="rtl"] .service-list-item i { margin-left: 0.6rem; margin-right: 0; }
+
+/* ────────────────────────────────────────
+   20. DASHBOARD (pages/dashboard.html)
+   ──────────────────────────────────────── */
+[dir="rtl"] .sidebar {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid var(--border-color);
+}
+[dir="rtl"] .dashboard-main { margin-left: 0; margin-right: 260px; }
+
+[dir="rtl"] .sidebar-link        { flex-direction: row-reverse; text-align: right; padding: 10px 16px 10px 12px; }
+[dir="rtl"] .sidebar-link i      { margin-left: 0.75rem; margin-right: 0; }
+[dir="rtl"] .sidebar-badge       { margin-left: 0; margin-right: auto; }
+[dir="rtl"] .sidebar-section-title { text-align: right; }
+
+[dir="rtl"] .stats-row           { direction: rtl; }
+[dir="rtl"] .stat-card           { text-align: right; }
+[dir="rtl"] .stat-card-trend     { flex-direction: row-reverse; }
+
+[dir="rtl"] .activity-item       { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .activity-meta       { flex-direction: row-reverse; }
+
+[dir="rtl"] .search-input        { padding: 9px 36px 9px 12px; }
+[dir="rtl"] .search-input-wrapper i { left: auto; right: 12px; }
+
+[dir="rtl"] .notification-panel  { right: auto; left: 1rem; }
+
+/* ────────────────────────────────────────
+   21. MODALS / TOASTS / OVERLAYS
+   ──────────────────────────────────────── */
+[dir="rtl"] .modal-content       { text-align: right; direction: rtl; }
+[dir="rtl"] .modal-close         { right: auto; left: 1.25rem; }
+[dir="rtl"] .toast-container     { right: auto; left: 24px; }
+[dir="rtl"] .toast               { text-align: right; }
+
+/* ────────────────────────────────────────
+   22. BUTTONS WITH ICONS
+   ──────────────────────────────────────── */
+[dir="rtl"] .btn i:first-child   { margin-left: 0.4rem; margin-right: 0; }
+[dir="rtl"] .btn i:last-child    { margin-right: 0.4rem; margin-left: 0; }
+
+/* ────────────────────────────────────────
+   23. SCROLL-TO-TOP & MISC. FIXED ELEMENTS
+   ──────────────────────────────────────── */
+[dir="rtl"] .scroll-top          { right: auto; left: 24px; }
+
+/* ────────────────────────────────────────
+   24. BADGES & TAGS
+   ──────────────────────────────────────── */
+[dir="rtl"] .badge               { direction: rtl; }
+[dir="rtl"] .tag-list            { flex-direction: row-reverse; justify-content: flex-end; }
+
+/* ────────────────────────────────────────
+   25. RESPONSIVE OVERRIDES
+   ──────────────────────────────────────── */
+@media (max-width: 1024px) {
+  /* Dashboard sidebar slides in from right in RTL */
+  [dir="rtl"] .sidebar           { transform: translateX(100%); }
+  [dir="rtl"] .sidebar.open      { transform: translateX(0); }
+  [dir="rtl"] .dashboard-main    { margin-right: 0; }
+}
+
+@media (max-width: 768px) {
+  /* Mobile nav opens below navbar — no horizontal flip needed */
+  [dir="rtl"] .nav-menu          { text-align: right; }
+  [dir="rtl"] .hero-cta          { flex-direction: column; align-items: flex-end; }
+  [dir="rtl"] .footer-bottom     { flex-direction: column; text-align: right; }
+  [dir="rtl"] .footer-bottom-links { flex-direction: column; align-items: flex-end; }
+}

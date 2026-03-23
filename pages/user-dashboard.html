@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EcoTrack User Dashboard – View your pickup schedule, recycling stats, billing and account details." />
+  <title>My Dashboard – EcoTrack Waste Management</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="../assets/css/rtl.css" />
+
+  <style>
+    /* Notification panel */
+    .notif-wrapper { position: relative; }
+    .notif-bell {
+      width: 40px; height: 40px; border-radius: var(--radius-full);
+      border: 1px solid var(--border-color); background: var(--bg-tertiary);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--text-secondary); transition: var(--transition); position: relative;
+    }
+    .notif-bell:hover { color: var(--primary); }
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-size: 0.65rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .notif-panel {
+      position: absolute; top: 50px; right: 0; width: 340px;
+      background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
+      z-index: 200; display: none;
+    }
+    .notif-panel.open { display: block; }
+    .notif-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .notif-header h4 { font-size: 0.95rem; }
+    .mark-all-read { font-size: 0.8rem; color: var(--primary); cursor: pointer; background: none; border: none; font-family: var(--font-primary); }
+    .notif-list { padding: 8px; max-height: 320px; overflow-y: auto; }
+    .notif-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px; border-radius: var(--radius-sm);
+      transition: var(--transition); cursor: pointer;
+    }
+    .notif-item:hover { background: var(--bg-tertiary); }
+    .notif-item.unread { background: rgba(22,163,74,0.06); }
+    .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); margin-top: 6px; flex-shrink: 0; }
+    .notif-dot.read { background: var(--border-color); }
+    .notif-body .title { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+    .notif-body .time { font-size: 0.775rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Grid helpers */
+    .dash-grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .dash-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+    .dash-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+    .dash-card-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+    }
+    .dash-card-title { font-size: 1rem; font-weight: 700; }
+
+    /* Sidebar overlay */
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4); z-index: 99;
+    }
+    .sidebar-overlay.visible { display: block; }
+
+    /* Activity feed */
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid var(--border-light);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .activity-icon.green { background: #dcfce7; color: var(--primary); }
+    .activity-icon.blue { background: #dbeafe; color: #2563eb; }
+    .activity-icon.amber { background: #fef3c7; color: #d97706; }
+    .activity-icon.red { background: #fee2e2; color: #dc2626; }
+    .activity-body .title { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+    .activity-body .desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    .activity-time { margin-left: auto; font-size: 0.775rem; color: var(--text-muted); flex-shrink: 0; }
+
+    /* Calendar */
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .cal-header h4 { font-size: 0.95rem; font-weight: 700; }
+    .cal-nav { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: var(--transition); }
+    .cal-nav:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-day-name { text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 4px; }
+    .cal-cell {
+      text-align: center; padding: 6px 2px; border-radius: var(--radius-sm);
+      font-size: 0.8rem; cursor: pointer; transition: var(--transition); position: relative;
+      color: var(--text-secondary);
+    }
+    .cal-cell:hover { background: var(--bg-secondary); color: var(--primary); }
+    .cal-cell.today { background: var(--primary); color: #fff; font-weight: 700; }
+    .cal-cell.has-event { color: var(--primary); font-weight: 600; }
+    .cal-cell.empty { cursor: default; }
+    .cal-dot { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+    .cal-cell.today .cal-dot { background: #fff; }
+
+    /* Progress rings */
+    .progress-rings { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ring-item { text-align: center; }
+    .ring-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px; font-weight: 500; }
+
+    /* Pickup request form */
+    .form-row { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+    .form-control {
+      width: 100%; padding: 10px 14px; border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md); background: var(--bg-tertiary);
+      color: var(--text-primary); font-size: 0.875rem; font-family: var(--font-primary);
+      transition: var(--transition);
+    }
+    .form-control:focus { outline: none; border-color: var(--primary); background: var(--bg-card); }
+    select.form-control { cursor: pointer; }
+
+    /* Billing rows */
+    .bill-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--border-light);
+    }
+    .bill-row:last-child { border-bottom: none; }
+    .bill-desc { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+    .bill-date { font-size: 0.775rem; color: var(--text-muted); }
+    .bill-amount { font-size: 0.95rem; font-weight: 700; }
+    .bill-amount.credit { color: var(--success); }
+    .bill-amount.debit { color: var(--text-primary); }
+
+    /* Profile card */
+    .profile-avatar-wrap { position: relative; display: inline-block; }
+    .profile-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 3px solid var(--primary); object-fit: cover;
+    }
+    .profile-avatar-edit {
+      position: absolute; bottom: 2px; right: 2px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--primary); color: #fff; border: 2px solid var(--bg-card);
+      display: flex; align-items: center; justify-content: center; font-size: 0.7rem; cursor: pointer;
+    }
+
+    /* Support quick links */
+    .support-link {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px; border-radius: var(--radius-md);
+      border: 1px solid var(--border-color); background: var(--bg-tertiary);
+      text-decoration: none; color: var(--text-primary);
+      transition: var(--transition); margin-bottom: 10px;
+    }
+    .support-link:hover { border-color: var(--primary); background: var(--bg-secondary); color: var(--primary); }
+    .support-link i { font-size: 1.2rem; color: var(--primary); width: 28px; text-align: center; }
+    .support-link-title { font-size: 0.875rem; font-weight: 600; }
+    .support-link-desc { font-size: 0.775rem; color: var(--text-muted); }
+
+    /* User-specific accent color */
+    :root { --user-accent: #0f766e; }
+
+    @media (max-width: 1280px) {
+      .dash-grid-2 { grid-template-columns: 1fr; }
+      .dash-grid-3 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .stats-cards { grid-template-columns: 1fr 1fr; }
+      .dash-grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar-inner">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="sidebar-toggle btn btn-icon" aria-label="Toggle sidebar" style="border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-secondary)">
+          <i class="fas fa-bars"></i>
+        </button>
+        <a href="../index.html" class="navbar-logo">
+          <div class="logo-icon">♻</div>
+          <div class="logo-text">
+            <span class="logo-name">EcoTrack</span>
+            <span class="logo-tagline" style="color:var(--primary);font-weight:700">My Dashboard</span>
+          </div>
+        </a>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;margin-left:auto">
+        <div class="notif-wrapper">
+          <button class="notif-bell" aria-label="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="notif-badge">2</span>
+          </button>
+          <div class="notif-panel" role="dialog" aria-label="Notifications panel">
+            <div class="notif-header">
+              <h4>Notifications</h4>
+              <button class="mark-all-read">Mark all read</button>
+            </div>
+            <div class="notif-list">
+              <div class="notif-item unread">
+                <div class="notif-dot"></div>
+                <div class="notif-body">
+                  <div class="title">Your pickup is confirmed for Mar 26</div>
+                  <div class="time">1 hour ago</div>
+                </div>
+              </div>
+              <div class="notif-item unread">
+                <div class="notif-dot"></div>
+                <div class="notif-body">
+                  <div class="title">Invoice #INV-2026-032 is ready</div>
+                  <div class="time">3 hours ago</div>
+                </div>
+              </div>
+              <div class="notif-item">
+                <div class="notif-dot read"></div>
+                <div class="notif-body">
+                  <div class="title">Recycling certificate for February ready</div>
+                  <div class="time">2 days ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+        <button class="rtl-toggle" title="Toggle RTL layout" aria-label="Toggle right-to-left layout">RTL</button>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--bg-secondary);border-radius:var(--radius-full);border:1.5px solid var(--primary);cursor:pointer">
+          <img src="https://i.pravatar.cc/32?img=12" alt="User" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--primary)" />
+          <div style="line-height:1.2">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--text-primary)">Jane Smith</div>
+            <div style="font-size:0.7rem;color:var(--primary);font-weight:600">Business Plan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" role="navigation" aria-label="User dashboard navigation">
+      <div style="padding:16px 20px 8px;border-bottom:1px solid var(--border-light);margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <img src="https://i.pravatar.cc/48?img=12" alt="Jane Smith" style="width:44px;height:44px;border-radius:50%;border:2px solid var(--primary)" />
+          <div>
+            <div style="font-weight:700;font-size:0.9rem;color:var(--text-primary)">Jane Smith</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">GrandStay Hotels</div>
+            <span style="background:#dcfce7;color:#15803d;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:var(--radius-full)">Business Plan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">My Account</div>
+        <a href="user-dashboard.html" class="sidebar-link active"><i class="fas fa-th-large"></i> Overview</a>
+        <a href="#profile-section" class="sidebar-link"><i class="fas fa-user-circle"></i> My Profile</a>
+        <a href="#billing-section" class="sidebar-link"><i class="fas fa-file-invoice-dollar"></i> Billing</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Services</div>
+        <a href="schedule.html" class="sidebar-link"><i class="fas fa-calendar-alt"></i> My Pickups <span class="sidebar-badge">3</span></a>
+        <a href="#request-section" class="sidebar-link"><i class="fas fa-plus-circle"></i> Request Pickup</a>
+        <a href="#recycling-section" class="sidebar-link"><i class="fas fa-recycle"></i> My Recycling</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-certificate"></i> My Certificates</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Help</div>
+        <a href="#support-section" class="sidebar-link"><i class="fas fa-headset"></i> Support</a>
+        <a href="contact.html" class="sidebar-link"><i class="fas fa-envelope"></i> Contact Us</a>
+        <a href="../index.html" class="sidebar-link"><i class="fas fa-home"></i> Back to Site</a>
+        <a href="../pages/login.html" class="sidebar-link" style="color:var(--danger)" onclick="return confirmLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay"></div>
+
+    <!-- MAIN -->
+    <main class="dashboard-main" aria-label="User dashboard main content">
+
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <span style="background:#dcfce7;color:var(--primary);font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:var(--radius-full);letter-spacing:0.5px">USER</span>
+          </div>
+          <div class="dashboard-title">Welcome back, Jane! 👋</div>
+          <div class="dashboard-subtitle">Here's a summary of your account and services – March 23, 2026</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="dashboard.html" class="btn btn-sm" style="border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-secondary)">
+            <i class="fas fa-shield-alt"></i> Admin Dashboard
+          </a>
+          <a href="#request-section" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Request Pickup</a>
+        </div>
+      </div>
+
+      <!-- Stats cards -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">3</div>
+              <div class="stat-card-label">Upcoming Pickups</div>
+              <div class="stat-card-trend up"><i class="fas fa-calendar-check"></i> Next: Mar 26</div>
+            </div>
+            <div class="stat-card-icon green"><i class="fas fa-truck"></i></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">1.8T</div>
+              <div class="stat-card-label">Waste Diverted (YTD)</div>
+              <div class="stat-card-trend up"><i class="fas fa-arrow-up"></i> +12% vs last year</div>
+            </div>
+            <div class="stat-card-icon green"><i class="fas fa-recycle"></i></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">89%</div>
+              <div class="stat-card-label">Recycling Rate</div>
+              <div class="stat-card-trend up"><i class="fas fa-arrow-up"></i> Above target</div>
+            </div>
+            <div class="stat-card-icon blue"><i class="fas fa-leaf"></i></div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">$840</div>
+              <div class="stat-card-label">Outstanding Balance</div>
+              <div class="stat-card-trend down"><i class="fas fa-file-invoice"></i> Due Apr 1</div>
+            </div>
+            <div class="stat-card-icon amber"><i class="fas fa-dollar-sign"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row: My Pickup Calendar + Quick Actions -->
+      <div class="dash-grid-2">
+        <!-- Pickup Calendar -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">My Pickup Schedule</h3>
+            <a href="schedule.html" class="btn btn-sm btn-primary" style="padding:6px 12px;font-size:0.78rem">Full Schedule</a>
+          </div>
+          <div id="user-calendar"></div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-light);display:flex;gap:16px;font-size:0.78rem;flex-wrap:wrap">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Pickup Scheduled</span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--primary)"></span> Today</span>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <!-- Next Pickup Card -->
+          <div class="dash-card" style="padding:20px">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:52px;height:52px;border-radius:var(--radius-md);background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🚛</div>
+              <div style="flex:1">
+                <div style="font-weight:700;color:var(--text-primary)">Next Pickup</div>
+                <div style="font-size:0.9rem;color:var(--primary);font-weight:600">Wednesday, Mar 26</div>
+                <div style="font-size:0.78rem;color:var(--text-muted)">General Waste – 8:00 AM</div>
+              </div>
+              <span class="status-badge active">Confirmed</span>
+            </div>
+          </div>
+
+          <!-- Eco Impact -->
+          <div class="dash-card" style="padding:20px">
+            <div class="dash-card-header" style="margin-bottom:12px">
+              <h3 class="dash-card-title" style="font-size:0.9rem">My Eco Impact (2026)</h3>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div style="text-align:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+                <div style="font-size:1.3rem;font-weight:800;color:var(--primary)">1.8T</div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">Waste Diverted</div>
+              </div>
+              <div style="text-align:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+                <div style="font-size:1.3rem;font-weight:800;color:#2563eb">2.4T</div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">CO₂ Saved</div>
+              </div>
+              <div style="text-align:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+                <div style="font-size:1.3rem;font-weight:800;color:#d97706">12</div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">Pickups Done</div>
+              </div>
+              <div style="text-align:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+                <div style="font-size:1.3rem;font-weight:800;color:#0f766e">3</div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">Certificates</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row: Recycling Stats + Activity + Support -->
+      <div class="dash-grid-3" id="recycling-section">
+        <!-- Recycling Donut Rings -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">My Recycling Rates</h3>
+          </div>
+          <div class="progress-rings">
+            <div class="ring-item">
+              <canvas data-donut="89" data-color="#16a34a" width="90" height="90" aria-label="Paper recycling 89%"></canvas>
+              <div class="ring-label">Paper</div>
+            </div>
+            <div class="ring-item">
+              <canvas data-donut="72" data-color="#0f766e" width="90" height="90" aria-label="Plastic recycling 72%"></canvas>
+              <div class="ring-label">Plastic</div>
+            </div>
+            <div class="ring-item">
+              <canvas data-donut="95" data-color="#16a34a" width="90" height="90" aria-label="Metal recycling 95%"></canvas>
+              <div class="ring-label">Metal</div>
+            </div>
+            <div class="ring-item">
+              <canvas data-donut="61" data-color="#f59e0b" width="90" height="90" aria-label="Glass recycling 61%"></canvas>
+              <div class="ring-label">Glass</div>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:0.85rem">
+              <span style="color:var(--text-secondary)">Overall diversion rate</span>
+              <span style="font-weight:700;color:var(--primary)">89%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" data-width="89%"></div></div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Recent Activity</h3>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon green"><i class="fas fa-check"></i></div>
+              <div class="activity-body">
+                <div class="title">Pickup completed</div>
+                <div class="desc">General Waste – 3 bins – 420kg</div>
+              </div>
+              <span class="activity-time">Mar 19</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon blue"><i class="fas fa-file-invoice"></i></div>
+              <div class="activity-body">
+                <div class="title">Invoice generated</div>
+                <div class="desc">#INV-2026-031 – $840.00</div>
+              </div>
+              <span class="activity-time">Mar 18</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon amber"><i class="fas fa-calendar-plus"></i></div>
+              <div class="activity-body">
+                <div class="title">Pickup scheduled</div>
+                <div class="desc">Recycling – Mar 26 confirmed</div>
+              </div>
+              <span class="activity-time">Mar 17</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon green"><i class="fas fa-certificate"></i></div>
+              <div class="activity-body">
+                <div class="title">Recycling certificate</div>
+                <div class="desc">February 2026 cert ready</div>
+              </div>
+              <span class="activity-time">Mar 5</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon green"><i class="fas fa-check"></i></div>
+              <div class="activity-body">
+                <div class="title">Pickup completed</div>
+                <div class="desc">Green Waste – 2 bins – 280kg</div>
+              </div>
+              <span class="activity-time">Mar 5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Support -->
+        <div class="dash-card" id="support-section">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Quick Support</h3>
+          </div>
+          <a href="contact.html" class="support-link">
+            <i class="fas fa-headset"></i>
+            <div>
+              <div class="support-link-title">Contact Support</div>
+              <div class="support-link-desc">Chat or email our team</div>
+            </div>
+          </a>
+          <a href="schedule.html" class="support-link">
+            <i class="fas fa-calendar-plus"></i>
+            <div>
+              <div class="support-link-title">Reschedule Pickup</div>
+              <div class="support-link-desc">Change a pickup date or time</div>
+            </div>
+          </a>
+          <a href="#" class="support-link">
+            <i class="fas fa-certificate"></i>
+            <div>
+              <div class="support-link-title">Download Certificate</div>
+              <div class="support-link-desc">Get your recycling cert PDF</div>
+            </div>
+          </a>
+          <a href="#" class="support-link">
+            <i class="fas fa-file-pdf"></i>
+            <div>
+              <div class="support-link-title">Download Invoice</div>
+              <div class="support-link-desc">Get latest billing statement</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Request Pickup Form -->
+      <div class="dash-card" id="request-section" style="margin-bottom:24px">
+        <div class="dash-card-header">
+          <h3 class="dash-card-title"><i class="fas fa-plus-circle" style="color:var(--primary)"></i> Request a Pickup</h3>
+          <span style="font-size:0.8rem;color:var(--text-muted)">We'll confirm within 24 hours</span>
+        </div>
+        <form id="pickup-request-form" onsubmit="handlePickupRequest(event)" novalidate>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="form-row">
+              <label class="form-label" for="pickup-type">Waste Type</label>
+              <select class="form-control" id="pickup-type" required>
+                <option value="">Select waste type…</option>
+                <option>General Waste</option>
+                <option>Recycling (Mixed)</option>
+                <option>Green / Organic Waste</option>
+                <option>Bulk / Hard Waste</option>
+                <option>Electronic Waste</option>
+                <option>Hazardous Waste</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pickup-date">Preferred Date</label>
+              <input type="date" class="form-control" id="pickup-date" required min="2026-03-24" />
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pickup-bins">Number of Bins</label>
+              <select class="form-control" id="pickup-bins" required>
+                <option value="">Select…</option>
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option><option>6+</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="pickup-time">Preferred Time</label>
+              <select class="form-control" id="pickup-time">
+                <option>Morning (7am – 12pm)</option>
+                <option>Afternoon (12pm – 5pm)</option>
+                <option>Any time</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="pickup-notes">Special Instructions (optional)</label>
+            <textarea class="form-control" id="pickup-notes" rows="2" placeholder="e.g. Gate code #1234, green bin only…" style="resize:vertical"></textarea>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:12px">
+            <button type="reset" class="btn btn-secondary btn-sm">Clear</button>
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-paper-plane"></i> Submit Request</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Row: Billing + Profile -->
+      <div class="dash-grid-2" style="margin-bottom:0" id="billing-section">
+        <!-- Billing History -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">Billing &amp; Payments</h3>
+            <button class="btn btn-sm btn-primary" style="padding:6px 12px;font-size:0.78rem" onclick="window.EcoTrack?.Toast.show('Billing statement downloaded.','success')"><i class="fas fa-download"></i> Download</button>
+          </div>
+
+          <!-- Balance summary -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+            <div style="padding:14px;background:var(--bg-secondary);border-radius:var(--radius-md);text-align:center">
+              <div style="font-size:1.5rem;font-weight:800;color:var(--warning)">$840</div>
+              <div style="font-size:0.78rem;color:var(--text-muted)">Amount Due – Apr 1</div>
+              <button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%" onclick="window.EcoTrack?.Toast.show('Redirecting to payment portal…','info')">Pay Now</button>
+            </div>
+            <div style="padding:14px;background:var(--bg-secondary);border-radius:var(--radius-md);text-align:center">
+              <div style="font-size:1.5rem;font-weight:800;color:var(--success)">$4,320</div>
+              <div style="font-size:0.78rem;color:var(--text-muted)">Total Paid (2026 YTD)</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">Next invoice: Apr 1</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="bill-row">
+              <div>
+                <div class="bill-desc">March 2026 – Business Plan</div>
+                <div class="bill-date">Due Apr 1, 2026 · INV-2026-032</div>
+              </div>
+              <div class="bill-amount debit">$840.00</div>
+            </div>
+            <div class="bill-row">
+              <div>
+                <div class="bill-desc">February 2026 – Business Plan</div>
+                <div class="bill-date">Paid Mar 1, 2026 · INV-2026-021</div>
+              </div>
+              <div class="bill-amount credit">✓ $840.00</div>
+            </div>
+            <div class="bill-row">
+              <div>
+                <div class="bill-desc">January 2026 – Business Plan</div>
+                <div class="bill-date">Paid Feb 1, 2026 · INV-2026-009</div>
+              </div>
+              <div class="bill-amount credit">✓ $840.00</div>
+            </div>
+            <div class="bill-row">
+              <div>
+                <div class="bill-desc">Bulk Collection – One-off</div>
+                <div class="bill-date">Paid Jan 15, 2026 · INV-2026-003</div>
+              </div>
+              <div class="bill-amount credit">✓ $210.00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="dash-card" id="profile-section">
+          <div class="dash-card-header">
+            <h3 class="dash-card-title">My Profile</h3>
+            <button class="btn btn-sm" style="padding:6px 12px;font-size:0.78rem;border:1px solid var(--primary);color:var(--primary);background:transparent;border-radius:var(--radius-md)" onclick="window.EcoTrack?.Toast.show('Profile edit coming soon.','info')"><i class="fas fa-edit"></i> Edit</button>
+          </div>
+          <div style="text-align:center;margin-bottom:20px">
+            <div class="profile-avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=12" alt="Jane Smith" class="profile-avatar" />
+              <div class="profile-avatar-edit"><i class="fas fa-camera"></i></div>
+            </div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-top:10px">Jane Smith</div>
+            <div style="font-size:0.85rem;color:var(--text-muted)">Operations Manager · GrandStay Hotels</div>
+            <span style="background:#dcfce7;color:#15803d;font-size:0.72rem;font-weight:700;padding:3px 12px;border-radius:var(--radius-full);margin-top:6px;display:inline-block">Business Plan · Active</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <i class="fas fa-envelope" style="color:var(--primary);width:18px"></i>
+              <div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">Email</div>
+                <div style="font-size:0.875rem;font-weight:600">jane.smith@grandstay.com</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <i class="fas fa-phone" style="color:var(--primary);width:18px"></i>
+              <div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">Phone</div>
+                <div style="font-size:0.875rem;font-weight:600">+61 2 9000 1234</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <i class="fas fa-map-marker-alt" style="color:var(--primary);width:18px"></i>
+              <div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">Service Address</div>
+                <div style="font-size:0.875rem;font-weight:600">45 Collins St, Sydney NSW 2000</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <i class="fas fa-trash" style="color:var(--primary);width:18px"></i>
+              <div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">Bins Registered</div>
+                <div style="font-size:0.875rem;font-weight:600">24 bins (General · Recycling · Green)</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <i class="fas fa-calendar-alt" style="color:var(--primary);width:18px"></i>
+              <div>
+                <div style="font-size:0.72rem;color:var(--text-muted)">Member Since</div>
+                <div style="font-size:0.875rem;font-weight:600">January 2023</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light)">
+            <button class="btn btn-sm" style="width:100%;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-secondary)" onclick="window.EcoTrack?.Toast.show('Password reset email sent.','success')">
+              <i class="fas fa-lock"></i> Change Password
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <button class="scroll-top" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+
+
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script>
+    // Override calendar render for user pickups
+    document.addEventListener('DOMContentLoaded', () => {
+      // Render user-specific calendar
+      const userPickups = {
+        '2026-03-26': 'General Waste',
+        '2026-04-02': 'Recycling',
+        '2026-04-09': 'General Waste',
+        '2026-04-16': 'Green Waste',
+        '2026-04-23': 'Recycling',
+      };
+
+      const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      let current = new Date(2026, 2, 1);
+
+      function pad(n) { return n < 10 ? '0' + n : n; }
+
+      function renderUserCal() {
+        const container = document.getElementById('user-calendar');
+        if (!container) return;
+        const year = current.getFullYear();
+        const month = current.getMonth();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date();
+
+        let html = `
+          <div class="cal-header">
+            <button class="cal-nav" id="ucal-prev"><i class="fas fa-chevron-left"></i></button>
+            <h4>${MONTHS[month]} ${year}</h4>
+            <button class="cal-nav" id="ucal-next"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="cal-grid">
+            ${DAYS.map(d => `<div class="cal-day-name">${d}</div>`).join('')}
+            ${Array(firstDay).fill('<div class="cal-cell empty"></div>').join('')}
+        `;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const key = `${year}-${pad(month+1)}-${pad(d)}`;
+          const pickup = userPickups[key];
+          const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+          let cls = 'cal-cell';
+          if (isToday) cls += ' today';
+          if (pickup) cls += ' has-event';
+          html += `<div class="${cls}" title="${pickup || ''}">${d}${pickup ? `<span class="cal-dot"></span>` : ''}</div>`;
+        }
+        html += '</div>';
+        container.innerHTML = html;
+
+        document.getElementById('ucal-prev')?.addEventListener('click', () => {
+          current = new Date(year, month - 1, 1);
+          renderUserCal();
+        });
+        document.getElementById('ucal-next')?.addEventListener('click', () => {
+          current = new Date(year, month + 1, 1);
+          renderUserCal();
+        });
+      }
+
+      renderUserCal();
+    });
+
+    function handlePickupRequest(e) {
+      e.preventDefault();
+      const type = document.getElementById('pickup-type').value;
+      const date = document.getElementById('pickup-date').value;
+      const bins = document.getElementById('pickup-bins').value;
+      if (!type || !date || !bins) {
+        window.EcoTrack?.Toast.show('Please fill in all required fields.', 'warning');
+        return;
+      }
+      window.EcoTrack?.Toast.show('Pickup request submitted! We\'ll confirm within 24 hours.', 'success');
+      e.target.reset();
+    }
+
+    function confirmLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        window.location.href = '../pages/login.html';
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>

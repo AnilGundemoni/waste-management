@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EcoTrack – Sign in to your dashboard as Admin or User." />
+  <title>Sign In – EcoTrack Waste Management</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dark-mode.css" />
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 40%, #e0f2fe 100%);
+      padding: 24px;
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* Logo area */
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-logo .logo-icon-lg {
+      width: 64px; height: 64px; border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff; font-size: 2rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+      box-shadow: 0 8px 24px rgba(22,163,74,0.3);
+    }
+    .login-logo h1 { font-size: 1.75rem; color: var(--text-primary); margin-bottom: 4px; }
+    .login-logo p { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* Tabs */
+    .role-tabs {
+      display: flex; background: var(--bg-tertiary); border-radius: var(--radius-md);
+      padding: 4px; gap: 4px; margin-bottom: 28px;
+      border: 1px solid var(--border-color);
+    }
+    .role-tab {
+      flex: 1; padding: 10px; text-align: center; border-radius: 8px;
+      cursor: pointer; font-size: 0.875rem; font-weight: 600;
+      transition: var(--transition); color: var(--text-secondary);
+      border: none; background: none; font-family: var(--font-primary);
+    }
+    .role-tab.active {
+      background: var(--bg-card); color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    .role-tab.admin.active { color: var(--danger); }
+    .role-tab.user.active { color: var(--primary); }
+
+    /* Card */
+    .login-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+
+    /* Role banner */
+    .role-banner {
+      padding: 20px 28px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .role-banner.admin-banner {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      border-bottom: 1px solid #fca5a5;
+    }
+    .role-banner.user-banner {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      border-bottom: 1px solid #86efac;
+    }
+    .role-banner .banner-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+    .admin-banner .banner-icon { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .user-banner .banner-icon { background: rgba(22,163,74,0.15); color: var(--primary); }
+    .role-banner h3 { font-size: 1rem; margin-bottom: 2px; }
+    .role-banner p { font-size: 0.82rem; color: var(--text-secondary); margin: 0; }
+
+    /* Form area */
+    .login-form-area { padding: 28px; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 7px; }
+    .input-wrap { position: relative; }
+    .input-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; pointer-events: none; }
+    .form-input {
+      width: 100%; padding: 11px 14px 11px 40px;
+      border: 1.5px solid var(--border-color); border-radius: var(--radius-md);
+      background: var(--bg-tertiary); color: var(--text-primary);
+      font-size: 0.875rem; font-family: var(--font-primary);
+      transition: var(--transition);
+    }
+    .form-input:focus { outline: none; border-color: var(--primary); background: var(--bg-card); }
+    .admin-form .form-input:focus { border-color: var(--danger); }
+    .pw-toggle {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      cursor: pointer; color: var(--text-muted); background: none; border: none; font-size: 0.9rem;
+    }
+    .pw-toggle:hover { color: var(--text-primary); }
+
+    .forgot-link { font-size: 0.8rem; color: var(--primary); text-align: right; display: block; margin-top: -10px; margin-bottom: 20px; text-decoration: none; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Submit button */
+    .btn-login {
+      width: 100%; padding: 13px; border-radius: var(--radius-md);
+      font-size: 0.95rem; font-weight: 700; border: none; cursor: pointer;
+      transition: var(--transition); font-family: var(--font-primary);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-login.admin-btn { background: var(--danger); color: #fff; }
+    .btn-login.admin-btn:hover { background: #dc2626; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(239,68,68,0.35); }
+    .btn-login.user-btn { background: var(--primary); color: #fff; }
+    .btn-login.user-btn:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(22,163,74,0.35); }
+
+    /* Divider */
+    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+    .divider span { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* Demo hint */
+    .demo-hint {
+      background: var(--bg-secondary); border: 1px solid var(--border-light);
+      border-radius: var(--radius-md); padding: 12px 16px; font-size: 0.8rem;
+      color: var(--text-muted); margin-top: 12px;
+    }
+    .demo-hint strong { color: var(--text-secondary); }
+
+    /* Other role link */
+    .other-role-link {
+      text-align: center; margin-top: 20px;
+      font-size: 0.85rem; color: var(--text-muted);
+    }
+    .other-role-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
+    .other-role-link a:hover { text-decoration: underline; }
+
+    /* Dark mode nav */
+    .top-bar {
+      position: fixed; top: 0; right: 0; padding: 16px 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    /* Panel visibility */
+    .role-panel { display: none; }
+    .role-panel.active { display: block; }
+  </style>
+</head>
+<body>
+  <!-- Corner controls -->
+  <div class="top-bar">
+    <a href="../index.html" style="font-size:0.8rem;color:var(--text-muted);text-decoration:none"><i class="fas fa-home"></i> Home</a>
+    <button class="theme-toggle" aria-label="Toggle theme" style="width:36px;height:36px;border-radius:var(--radius-full);border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center">
+      <i class="fas fa-moon"></i>
+    </button>
+  </div>
+
+  <div class="login-wrap">
+    <!-- Logo -->
+    <div class="login-logo">
+      <div class="logo-icon-lg">♻</div>
+      <h1>EcoTrack</h1>
+      <p>Waste Management &amp; Recycling Solutions</p>
+    </div>
+
+    <div class="login-card">
+      <div class="login-form-area">
+        <form id="login-form" onsubmit="handleLogin(event)" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="login-email">Email Address</label>
+            <div class="input-wrap">
+              <i class="fas fa-envelope"></i>
+              <input type="email" class="form-input" id="login-email" placeholder="you@example.com" autocomplete="email" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock"></i>
+              <input type="password" class="form-input" id="login-password" placeholder="Enter your password" autocomplete="current-password" required />
+              <button type="button" class="pw-toggle" onclick="togglePw('login-password', this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-login user-btn" style="margin-top:8px">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px">
+      <a href="signup.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:var(--radius-md);font-size:0.95rem;font-weight:700;text-decoration:none">
+        <i class="fas fa-user-plus"></i> Create Account
+      </a>
+    </div>
+
+    <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:20px">
+      &copy; 2026 EcoTrack · <a href="../index.html" style="color:var(--text-muted)">Back to Home</a>
+    </p>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    const REGISTERED_USERS_KEY = 'ecotrack-registered-users';
+
+    function getRegisteredUsers() {
+      const raw = localStorage.getItem(REGISTERED_USERS_KEY);
+      if (!raw) return {};
+      try { return JSON.parse(raw); } catch { return {}; }
+    }
+
+    function togglePw(id, btn) {
+      const input = document.getElementById(id);
+      const isText = input.type === 'text';
+      input.type = isText ? 'password' : 'text';
+      btn.querySelector('i').className = isText ? 'fas fa-eye' : 'fas fa-eye-slash';
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const pw    = document.getElementById('login-password').value;
+
+      if (!email || !pw) {
+        alert('Please enter your email and password.');
+        return;
+      }
+
+      // Check registered users first, then demo credentials
+      const registered = getRegisteredUsers();
+      const allCreds = [
+        registered.admin,
+        registered.user,
+        { email: 'admin@ecotrack.com', password: 'admin123' },
+        { email: 'jane@ecotrack.com',  password: 'user123'  }
+      ].filter(Boolean);
+
+      const match = allCreds.find(c => c.email.toLowerCase() === email.toLowerCase() && c.password === pw);
+
+      if (match) {
+        localStorage.setItem('ecotrack-auth-user', JSON.stringify({
+          email: match.email,
+          name: match.name || email.split('@')[0],
+          lastLogin: new Date().toISOString()
+        }));
+        window.location.href = '../index.html';
+      } else {
+        alert('Incorrect email or password. Please try again or create an account.');
+      }
+    }
+  </script>
+</body>
+</html>

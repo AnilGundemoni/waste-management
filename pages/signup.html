@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EcoTrack - Create your Admin or User account." />
+  <title>Sign Up - EcoTrack Waste Management</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dark-mode.css" />
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 35%, #e0f2fe 100%);
+      padding: 24px;
+    }
+
+    .signup-wrap { width: 100%; max-width: 560px; }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .signup-logo { text-align: center; margin-bottom: 26px; }
+    .signup-logo .logo-icon-lg {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);
+    }
+    .signup-logo h1 { font-size: 1.75rem; color: var(--text-primary); margin-bottom: 4px; }
+    .signup-logo p { font-size: 0.9rem; color: var(--text-muted); }
+
+    .signup-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+
+    .role-tabs {
+      display: flex;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px;
+      gap: 8px;
+    }
+    .role-tab {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-secondary);
+      background: transparent;
+      transition: var(--transition);
+      font-family: var(--font-primary);
+    }
+    .role-tab.active {
+      background: var(--bg-card);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-primary);
+    }
+    .role-tab.admin.active { color: var(--danger); }
+    .role-tab.user.active { color: var(--primary); }
+
+    .signup-form-area { padding: 26px; }
+
+    .role-banner {
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid transparent;
+    }
+    .role-banner.admin-banner {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      border-color: #fca5a5;
+    }
+    .role-banner.user-banner {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      border-color: #86efac;
+    }
+    .role-banner .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.65);
+    }
+    .role-banner strong { display: block; font-size: 0.95rem; color: var(--text-primary); }
+    .role-banner span { font-size: 0.8rem; color: var(--text-secondary); }
+
+    .role-panel { display: none; }
+    .role-panel.active { display: block; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .input-wrap { position: relative; }
+    .input-wrap i {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      padding: 11px 12px 11px 36px;
+      font-size: 0.88rem;
+      font-family: var(--font-primary);
+      transition: var(--transition);
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--bg-card);
+    }
+
+    .btn-signup {
+      width: 100%;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      font-size: 0.93rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      font-family: var(--font-primary);
+      transition: var(--transition);
+    }
+    .btn-signup.admin-btn { background: var(--danger); }
+    .btn-signup.admin-btn:hover { background: #dc2626; }
+    .btn-signup.user-btn { background: var(--primary); }
+    .btn-signup.user-btn:hover { background: var(--primary-dark); }
+
+    .helper {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+
+    .switch-link {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+    .switch-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .switch-link a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .signup-form-area { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <a href="../index.html" style="font-size:0.8rem;color:var(--text-muted);text-decoration:none"><i class="fas fa-home"></i> Home</a>
+    <a href="login.html" style="font-size:0.8rem;color:var(--text-muted);text-decoration:none"><i class="fas fa-right-to-bracket"></i> Sign In</a>
+    <button class="theme-toggle" aria-label="Toggle theme" style="width:36px;height:36px;border-radius:var(--radius-full);border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center">
+      <i class="fas fa-moon"></i>
+    </button>
+  </div>
+
+  <div class="signup-wrap">
+    <div class="signup-logo">
+      <div class="logo-icon-lg">♻</div>
+      <h1>Create Account</h1>
+      <p>Create your credentials for EcoTrack access</p>
+    </div>
+
+    <div class="signup-card">
+      <div class="signup-form-area">
+        <form onsubmit="handleSignup(event)" novalidate>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="su-name">Full Name</label>
+              <div class="input-wrap">
+                <i class="fas fa-user"></i>
+                <input class="form-input" id="su-name" type="text" placeholder="Your Name" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="su-email">Email</label>
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input class="form-input" id="su-email" type="email" placeholder="you@example.com" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="su-password">Password</label>
+              <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input class="form-input" id="su-password" type="password" minlength="6" placeholder="At least 6 characters" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="su-confirm">Confirm Password</label>
+              <div class="input-wrap">
+                <i class="fas fa-check"></i>
+                <input class="form-input" id="su-confirm" type="password" minlength="6" placeholder="Repeat password" required />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-signup user-btn">
+            <i class="fas fa-user-plus"></i> Sign Up
+          </button>
+        </form>
+
+        <div class="helper">
+          Your credentials are saved locally in this browser. Use them to sign in from the login page.
+        </div>
+
+        <div class="switch-link">
+          Already have an account? <a href="login.html">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    const REGISTERED_USERS_KEY = 'ecotrack-registered-users';
+
+    function getRegisteredUsers() {
+      const raw = localStorage.getItem(REGISTERED_USERS_KEY);
+      if (!raw) return {};
+      try { return JSON.parse(raw); } catch { return {}; }
+    }
+
+    function saveRegisteredUsers(users) {
+      localStorage.setItem(REGISTERED_USERS_KEY, JSON.stringify(users));
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function handleSignup(event) {
+      event.preventDefault();
+
+      const name     = document.getElementById('su-name').value.trim();
+      const email    = document.getElementById('su-email').value.trim();
+      const password = document.getElementById('su-password').value;
+      const confirm  = document.getElementById('su-confirm').value;
+
+      if (!name || !email || !password || !confirm) {
+        alert('Please fill all fields.');
+        return;
+      }
+      if (!isValidEmail(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      if (password.length < 6) {
+        alert('Password must be at least 6 characters.');
+        return;
+      }
+      if (password !== confirm) {
+        alert('Passwords do not match.');
+        return;
+      }
+
+      const users = getRegisteredUsers();
+      users['user'] = { name, email, password, createdAt: new Date().toISOString() };
+      saveRegisteredUsers(users);
+
+      window.EcoTrack?.Toast.show('Account created successfully!', 'success', 1800);
+      setTimeout(() => {
+        window.location.href = '../index.html';
+      }, 700);
+    }
+  </script>
+</body>
+</html>

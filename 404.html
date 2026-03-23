@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Page Not Found – EcoTrack Waste Management & Recycling" />
+  <title>404 – Page Not Found | EcoTrack</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="assets/css/rtl.css" />
+
+  <style>
+    /* ── 404 Page Styles ── */
+    .error-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .error-hero {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7rem 1.5rem 4rem;
+      background: linear-gradient(160deg, var(--bg-secondary) 0%, var(--bg-primary) 60%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* floating background blobs */
+    .error-hero::before,
+    .error-hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .error-hero::before {
+      width: 420px; height: 420px;
+      background: rgba(22,163,74,0.12);
+      top: -80px; left: -100px;
+    }
+    .error-hero::after {
+      width: 340px; height: 340px;
+      background: rgba(5,46,22,0.10);
+      bottom: -60px; right: -80px;
+    }
+
+    .error-content {
+      text-align: center;
+      max-width: 640px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* giant 404 number */
+    .error-number {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(7rem, 22vw, 14rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -4px;
+      background: linear-gradient(135deg, #16a34a 0%, #052e16 60%, #22c55e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.25rem;
+      user-select: none;
+    }
+
+    .error-icon-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .error-icon-row .icon-circle {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, #16a34a, #052e16);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.3rem;
+      animation: spinOnce 1.2s ease-out forwards;
+    }
+
+    @keyframes spinOnce {
+      from { transform: rotate(-180deg) scale(0.4); opacity: 0; }
+      to   { transform: rotate(0deg)   scale(1);   opacity: 1; }
+    }
+
+    .error-divider {
+      width: 64px; height: 3px;
+      background: linear-gradient(90deg, #16a34a, #22c55e);
+      border-radius: 2px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .error-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.25rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .error-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .missing-path {
+      margin: -1.5rem auto 1.6rem;
+      padding: 0.65rem 0.9rem;
+      border-radius: var(--radius-md);
+      max-width: 560px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+      word-break: break-all;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .error-actions .btn {
+      min-width: 160px;
+    }
+
+    /* quick navigation tiles */
+    .error-nav-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted, #6b7280);
+      margin-bottom: 1rem;
+    }
+
+    .error-nav-grid {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .error-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.1rem;
+      border-radius: 2rem;
+      background: var(--card-bg, #fff);
+      border: 1.5px solid var(--border-light, #e5e7eb);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .error-nav-item:hover {
+      border-color: var(--primary, #16a34a);
+      color: var(--primary, #16a34a);
+      background: rgba(22,163,74,0.06);
+      transform: translateY(-2px);
+    }
+
+    .error-nav-item i {
+      font-size: 0.9rem;
+      color: var(--primary, #16a34a);
+    }
+
+    @media (max-width: 480px) {
+      .error-actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="navbar-inner">
+        <a href="index.html" class="navbar-logo" aria-label="EcoTrack Home">
+          <div class="logo-icon"><i class="fas fa-recycle"></i></div>
+          <div>
+            <span class="logo-name">EcoTrack</span>
+            <span class="logo-tagline">Waste Management</span>
+          </div>
+        </a>
+
+        <ul class="nav-menu" id="navMenu" role="menubar">
+          <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
+          <li role="none"><a href="pages/about.html" class="nav-link" role="menuitem">About</a></li>
+          <li role="none"><a href="pages/services.html" class="nav-link" role="menuitem">Services</a></li>
+          <li role="none"><a href="pages/blog.html" class="nav-link" role="menuitem">Blog</a></li>
+          <li role="none"><a href="pages/contact.html" class="nav-link" role="menuitem">Contact</a></li>
+        </ul>
+
+        <div class="navbar-actions">
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon" id="themeIcon"></i>
+          </button>
+          <button class="rtl-toggle" title="Toggle RTL layout" aria-label="Toggle right-to-left layout">RTL</button>
+          <a href="pages/schedule.html" class="btn btn-primary btn-sm">Schedule Pickup</a>
+          <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── 404 Content ── -->
+  <main class="error-page" role="main">
+    <section class="error-hero">
+      <div class="error-content">
+
+        <div class="error-number" aria-label="404" role="img">404</div>
+
+        <div class="error-icon-row" aria-hidden="true">
+          <div class="icon-circle"><i class="fas fa-recycle"></i></div>
+        </div>
+
+        <div class="error-divider"></div>
+
+        <h1 class="error-title">Oops! Page Not Found</h1>
+        <p class="error-subtitle">
+          It looks like this page has been recycled or never existed. Don't worry — 
+          we'll help you find your way back to a greener path.
+        </p>
+        <p class="missing-path" id="missingPath" hidden></p>
+
+        <div class="error-actions">
+          <a href="index.html" class="btn btn-primary">
+            <i class="fas fa-home"></i> Go to Homepage
+          </a>
+          <a href="pages/contact.html" class="btn btn-outline">
+            <i class="fas fa-envelope"></i> Contact Support
+          </a>
+          <a href="pages/coming-soon.html" class="btn btn-secondary">
+            <i class="fas fa-hourglass-half"></i> Maintenance / Coming Soon
+          </a>
+        </div>
+
+        <p class="error-nav-title">Or visit one of these pages</p>
+        <nav class="error-nav-grid" aria-label="Quick navigation">
+          <a href="pages/services.html" class="error-nav-item">
+            <i class="fas fa-truck"></i> Services
+          </a>
+          <a href="pages/about.html" class="error-nav-item">
+            <i class="fas fa-leaf"></i> About Us
+          </a>
+          <a href="pages/schedule.html" class="error-nav-item">
+            <i class="fas fa-calendar-check"></i> Schedule Pickup
+          </a>
+          <a href="pages/blog.html" class="error-nav-item">
+            <i class="fas fa-newspaper"></i> Blog
+          </a>
+          <a href="pages/dashboard.html" class="error-nav-item">
+            <i class="fas fa-chart-bar"></i> Dashboard
+          </a>
+          <a href="pages/coming-soon.html" class="error-nav-item">
+            <i class="fas fa-hourglass-half"></i> Coming Soon
+          </a>
+        </nav>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="navbar-logo" aria-label="EcoTrack">
+            <div class="logo-icon"><i class="fas fa-recycle"></i></div>
+            <div>
+              <span class="logo-name">EcoTrack</span>
+              <span class="logo-tagline">Waste Management</span>
+            </div>
+          </div>
+          <p class="footer-desc">Smart waste management and recycling solutions for a cleaner, greener tomorrow.</p>
+          <div class="social-links">
+            <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="pages/about.html">About</a></li>
+            <li><a href="pages/services.html">Services</a></li>
+            <li><a href="pages/blog.html">Blog</a></li>
+            <li><a href="pages/contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul class="footer-links">
+            <li><a href="pages/services.html">Commercial Bins</a></li>
+            <li><a href="pages/schedule.html">Schedule Pickup</a></li>
+            <li><a href="pages/services.html">Recycling Programs</a></li>
+            <li><a href="pages/dashboard.html">Analytics Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact Us</h4>
+          <ul class="footer-contact">
+            <li><i class="fas fa-map-marker-alt"></i> 123 Green Street, EcoCity</li>
+            <li><i class="fas fa-phone"></i> +1 (800) ECO-TRACK</li>
+            <li><i class="fas fa-envelope"></i> hello@ecotrack.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 EcoTrack. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    // Show missing path from query parameter when redirected from a broken route
+    (function showMissingPath() {
+      const el = document.getElementById('missingPath');
+      if (!el) return;
+      const params = new URLSearchParams(window.location.search);
+      const missing = params.get('missing');
+      if (!missing) return;
+      el.hidden = false;
+      el.textContent = `Requested path not found: ${missing}`;
+    })();
+
+  </script>
+</body>
+</html>

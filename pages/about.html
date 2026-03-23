@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Learn about EcoTrack's 15+ year history, our sustainability mission, and the expert team dedicated to smarter waste management solutions." />
+  <title>About Us – EcoTrack Waste Management & Recycling</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="../assets/css/rtl.css" />
+
+  <style>
+    /* Mission & Values */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .value-card {
+      text-align: center;
+      padding: 36px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      transition: var(--transition);
+    }
+    .value-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-6px); border-color: var(--primary-light); }
+    .value-icon { font-size: 2.5rem; margin-bottom: 16px; display: block; }
+    .value-card h3 { font-size: 1.1rem; margin-bottom: 10px; }
+
+    /* Team */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+    }
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: var(--transition);
+      text-align: center;
+    }
+    .team-card:hover { box-shadow: var(--shadow-xl); transform: translateY(-8px); }
+    .team-photo { position: relative; }
+    .team-photo img { width: 100%; height: 260px; object-fit: cover; object-position: top; }
+    .team-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(22,163,74,0.9) 0%, transparent 60%);
+      opacity: 0;
+      transition: var(--transition);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 16px;
+      gap: 10px;
+    }
+    .team-card:hover .team-overlay { opacity: 1; }
+    .team-social-btn {
+      width: 36px; height: 36px; background: rgba(255,255,255,0.9);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: var(--primary); font-size: 0.85rem; transition: var(--transition);
+    }
+    .team-social-btn:hover { background: #fff; transform: scale(1.15); }
+    .team-info { padding: 20px; }
+    .team-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+    .team-role { font-size: 0.8rem; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .team-bio { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+
+    /* Timeline */
+    .timeline { position: relative; padding: 24px 0; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--primary), var(--secondary));
+      transform: translateX(-50%);
+    }
+    .timeline-item {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: calc(50% + 40px);
+      margin-bottom: 48px;
+      position: relative;
+    }
+    .timeline-item:nth-child(even) {
+      justify-content: flex-start;
+      padding-right: 0;
+      padding-left: calc(50% + 40px);
+    }
+    .timeline-dot {
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      background: var(--primary);
+      border: 3px solid var(--bg-primary);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+    .timeline-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      max-width: 400px;
+      transition: var(--transition);
+    }
+    .timeline-content:hover { box-shadow: var(--shadow-lg); }
+    .timeline-year { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .timeline-content h3 { font-size: 1.1rem; margin-bottom: 8px; }
+    .timeline-content p { font-size: 0.875rem; }
+
+    /* Certifications */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .cert-card {
+      text-align: center;
+      padding: 32px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      transition: var(--transition);
+    }
+    .cert-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary-light); }
+    .cert-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+    .cert-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .cert-card p { font-size: 0.8rem; }
+
+    /* Careers */
+    .careers-section { background: var(--bg-secondary); }
+    .jobs-list { display: flex; flex-direction: column; gap: 16px; max-width: 800px; margin: 0 auto; }
+    .job-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      transition: var(--transition);
+      gap: 16px;
+    }
+    .job-item:hover { box-shadow: var(--shadow-md); border-color: var(--primary-light); }
+    .job-info h4 { font-size: 1rem; margin-bottom: 6px; }
+    .job-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .job-tag {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 1024px) {
+      .values-grid, .team-grid, .certs-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .timeline::before { left: 20px; }
+      .timeline-item, .timeline-item:nth-child(even) { padding-left: 56px; padding-right: 0; justify-content: flex-start; }
+      .timeline-dot { left: 20px; }
+      .values-grid, .certs-grid { grid-template-columns: 1fr 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .job-item { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 640px) {
+      .values-grid, .team-grid, .certs-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="navbar-logo">
+        <div class="logo-icon">♻</div>
+        <div class="logo-text">
+          <span class="logo-name">EcoTrack</span>
+          <span class="logo-tagline">Waste &amp; Recycling</span>
+        </div>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="about.html" class="nav-link active">About Us</a></li>
+        <li><a href="blog.html" class="nav-link">Blog</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+        <button class="rtl-toggle" title="Toggle RTL layout" aria-label="Toggle right-to-left layout">RTL</button>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm"><i class="fas fa-chart-bar"></i> Dashboard</a>
+        <a href="login.html" class="btn btn-outline-primary btn-sm"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="signup.html" class="btn btn-secondary btn-sm nav-signup-link"><i class="fas fa-user-plus"></i> Sign Up</a>
+        <a href="schedule.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-check"></i> Schedule Pickup</a>
+        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- PAGE HEADER -->
+    <header class="page-header" aria-label="About page header">
+      <div class="container">
+        <span class="badge badge-primary" style="margin-bottom:16px"><i class="fas fa-building"></i> Our Story</span>
+        <h1>About EcoTrack</h1>
+        <p>15 years of pioneering sustainable waste management solutions that protect the planet and empower businesses.</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span aria-hidden="true"><i class="fas fa-chevron-right" style="font-size:0.7rem"></i></span>
+          <span class="current" aria-current="page">About Us</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- MISSION SECTION -->
+    <section class="section-padding" aria-labelledby="mission-heading">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+          <div data-reveal>
+            <span class="section-label"><i class="fas fa-bullseye"></i> Our Mission</span>
+            <h2 class="section-title" id="mission-heading">Turning Waste Into<br />a Resource, Not a Problem</h2>
+            <p style="margin-bottom:20px">Founded in 2011, EcoTrack began with a simple belief: that businesses should never have to choose between being environmentally responsible and running profitably.</p>
+            <p style="margin-bottom:20px">Today we serve over 2,500 commercial clients, diverting 50,000+ tonnes of waste from landfill every year through smart technology, dedicated service, and a deep commitment to circularity.</p>
+            <p>Our mission is to make best-practice waste management the norm, not the exception — delivering measurable environmental and financial benefits to every client we serve.</p>
+            <div style="display:flex;gap:16px;margin-top:32px;flex-wrap:wrap">
+              <a href="contact.html" class="btn btn-primary"><i class="fas fa-handshake"></i> Partner With Us</a>
+              <a href="services.html" class="btn btn-secondary"><i class="fas fa-cogs"></i> Our Services</a>
+            </div>
+          </div>
+          <div data-reveal data-reveal-delay="150">
+            <div style="border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl)">
+              <img
+                src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=700&q=80"
+                alt="EcoTrack team working at sustainable recycling facility"
+                loading="lazy"
+                style="width:100%;height:460px;object-fit:cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Values -->
+        <div class="text-center" style="margin-top:80px" data-reveal>
+          <span class="section-label"><i class="fas fa-heart"></i> Our Values</span>
+          <h2 class="section-title">What Drives Everything We Do</h2>
+        </div>
+        <div class="values-grid">
+          <div class="value-card" data-reveal data-reveal-delay="0">
+            <span class="value-icon">🌱</span>
+            <h3>Sustainability First</h3>
+            <p>Every decision we make is guided by its environmental impact. We measure success in tonnes diverted, not just revenue.</p>
+          </div>
+          <div class="value-card" data-reveal data-reveal-delay="100">
+            <span class="value-icon">🤝</span>
+            <h3>Client Partnership</h3>
+            <p>We don't just collect waste — we help clients build long-term sustainability strategies that deliver real results.</p>
+          </div>
+          <div class="value-card" data-reveal data-reveal-delay="200">
+            <span class="value-icon">💡</span>
+            <h3>Innovation</h3>
+            <p>From IoT sensors to AI route optimization, we continuously invest in technology that makes waste management smarter.</p>
+          </div>
+          <div class="value-card" data-reveal data-reveal-delay="300">
+            <span class="value-icon">🏆</span>
+            <h3>Excellence</h3>
+            <p>ISO-certified processes, trained personnel, and rigorous quality standards ensure reliable, consistent service every time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAM SECTION -->
+    <section class="section-padding services-bg" id="team" aria-labelledby="team-heading">
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <span class="section-label"><i class="fas fa-users"></i> Our Team</span>
+          <h2 class="section-title" id="team-heading">Meet the People Behind EcoTrack</h2>
+          <p class="section-subtitle">Our diverse team combines environmental science expertise, technology innovation, and operational excellence.</p>
+        </div>
+        <div class="team-grid">
+          <div class="team-card" data-reveal data-reveal-delay="0">
+            <div class="team-photo">
+              <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Daniel Green, CEO" loading="lazy" />
+              <div class="team-overlay">
+                <a href="#" class="team-social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="team-social-btn" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+              </div>
+            </div>
+            <div class="team-info">
+              <div class="team-name">Daniel Green</div>
+              <div class="team-role">CEO & Co-Founder</div>
+              <p class="team-bio">20 years in environmental management. Former EPA consultant turned entrepreneur with a passion for circular economy.</p>
+            </div>
+          </div>
+
+          <div class="team-card" data-reveal data-reveal-delay="100">
+            <div class="team-photo">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Priya Sharma, CTO" loading="lazy" />
+              <div class="team-overlay">
+                <a href="#" class="team-social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="team-social-btn" aria-label="GitHub"><i class="fab fa-github"></i></a>
+              </div>
+            </div>
+            <div class="team-info">
+              <div class="team-name">Priya Sharma</div>
+              <div class="team-role">Chief Technology Officer</div>
+              <p class="team-bio">Led IoT platform development at two Fortune 500 companies before joining EcoTrack to build our smart monitoring system.</p>
+            </div>
+          </div>
+
+          <div class="team-card" data-reveal data-reveal-delay="200">
+            <div class="team-photo">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="Michael Torres, COO" loading="lazy" />
+              <div class="team-overlay">
+                <a href="#" class="team-social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+            <div class="team-info">
+              <div class="team-name">Michael Torres</div>
+              <div class="team-role">Chief Operations Officer</div>
+              <p class="team-bio">Logistics and fleet management specialist who rebuilt our collection operations from the ground up in 2017.</p>
+            </div>
+          </div>
+
+          <div class="team-card" data-reveal data-reveal-delay="300">
+            <div class="team-photo">
+              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80" alt="Emma Liu, Head of Sustainability" loading="lazy" />
+              <div class="team-overlay">
+                <a href="#" class="team-social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+            <div class="team-info">
+              <div class="team-name">Emma Liu</div>
+              <div class="team-role">Head of Sustainability</div>
+              <p class="team-bio">PhD Environmental Science. Designs our ISO-aligned recycling programs and represents EcoTrack at global sustainability forums.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY TIMELINE -->
+    <section class="section-padding" aria-labelledby="history-heading">
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <span class="section-label"><i class="fas fa-history"></i> Our Journey</span>
+          <h2 class="section-title" id="history-heading">15 Years of Growth &amp; Impact</h2>
+        </div>
+        <div class="timeline" style="margin-top:48px">
+          <div class="timeline-item" data-reveal>
+            <div class="timeline-content">
+              <div class="timeline-year">2011 – Founded</div>
+              <h3>EcoTrack Established</h3>
+              <p>Daniel Green and two colleagues launched EcoTrack with 12 commercial clients and a commitment to zero-landfill operations.</p>
+            </div>
+            <div class="timeline-dot"></div>
+          </div>
+          <div class="timeline-item" data-reveal>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-year">2014 – Expanded</div>
+              <h3>Regional Expansion</h3>
+              <p>Expanded operations to 5 cities. Launched our commercial recycling program, achieving 60% diversion rate for clients.</p>
+            </div>
+          </div>
+          <div class="timeline-item" data-reveal>
+            <div class="timeline-content">
+              <div class="timeline-year">2017 – Technology</div>
+              <h3>Smart Platform Launch</h3>
+              <p>Released our IoT bin monitoring system and the EcoTrack client portal — a first in the Australian waste industry.</p>
+            </div>
+            <div class="timeline-dot"></div>
+          </div>
+          <div class="timeline-item" data-reveal>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-year">2020 – Certified</div>
+              <h3>ISO 14001 Certification</h3>
+              <p>Achieved ISO 14001 environmental management certification. Surpassed 1,000 commercial clients and 20,000 tonnes recycled annually.</p>
+            </div>
+          </div>
+          <div class="timeline-item" data-reveal>
+            <div class="timeline-content">
+              <div class="timeline-year">2024 – AI-Powered</div>
+              <h3>AI Route Optimization</h3>
+              <p>Launched AI-powered pickup routing, reducing fleet emissions by 30%. Achieved carbon-neutral operations.</p>
+            </div>
+            <div class="timeline-dot"></div>
+          </div>
+          <div class="timeline-item" data-reveal>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-year">2026 – Today</div>
+              <h3>2,500+ Clients & Growing</h3>
+              <p>Serving 2,500+ commercial clients across 18 regions. Launching our next-generation analytics dashboard and mobile app.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CERTIFICATIONS -->
+    <section class="section-padding services-bg" aria-labelledby="certs-heading">
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <span class="section-label"><i class="fas fa-certificate"></i> Certifications</span>
+          <h2 class="section-title" id="certs-heading">Certified, Compliant &amp; Trusted</h2>
+        </div>
+        <div class="certs-grid" style="margin-top:48px">
+          <div class="cert-card" data-reveal data-reveal-delay="0">
+            <span class="cert-icon">🏅</span>
+            <h4>ISO 14001:2015</h4>
+            <p>Environmental Management System certification for sustainable operations.</p>
+          </div>
+          <div class="cert-card" data-reveal data-reveal-delay="100">
+            <span class="cert-icon">🛡️</span>
+            <h4>Licensed Waste Carrier</h4>
+            <p>Fully licensed for collection, transport, and disposal of all waste categories.</p>
+          </div>
+          <div class="cert-card" data-reveal data-reveal-delay="200">
+            <span class="cert-icon">🌿</span>
+            <h4>Carbon Neutral Op.</h4>
+            <p>Verified carbon-neutral operational status since 2024 via certified offsetting.</p>
+          </div>
+          <div class="cert-card" data-reveal data-reveal-delay="300">
+            <span class="cert-icon">⭐</span>
+            <h4>Industry Excellence</h4>
+            <p>Winner – National Recycling Council "WMAA Recycling Operator of the Year" 2023.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAREERS -->
+    <section class="section-padding careers-section" id="careers" aria-labelledby="careers-heading">
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <span class="section-label"><i class="fas fa-briefcase"></i> Careers</span>
+          <h2 class="section-title" id="careers-heading">Join Our Growing Team</h2>
+          <p class="section-subtitle">Be part of a company that's making a real environmental difference. We're hiring passionate people across multiple disciplines.</p>
+        </div>
+        <div class="jobs-list">
+          <div class="job-item" data-reveal>
+            <div class="job-info">
+              <h4>Senior IoT Platform Engineer</h4>
+              <div class="job-meta">
+                <span class="job-tag"><i class="fas fa-map-marker-alt"></i> Sydney, NSW</span>
+                <span class="job-tag"><i class="fas fa-clock"></i> Full-time</span>
+                <span class="job-tag" style="background:#dcfce7;color:#15803d">Technology</span>
+              </div>
+            </div>
+            <a href="contact.html" class="btn btn-primary btn-sm">Apply Now</a>
+          </div>
+          <div class="job-item" data-reveal>
+            <div class="job-info">
+              <h4>Sustainability Consultant</h4>
+              <div class="job-meta">
+                <span class="job-tag"><i class="fas fa-map-marker-alt"></i> Remote / Hybrid</span>
+                <span class="job-tag"><i class="fas fa-clock"></i> Full-time</span>
+                <span class="job-tag" style="background:#dbeafe;color:#1d4ed8">Consulting</span>
+              </div>
+            </div>
+            <a href="contact.html" class="btn btn-primary btn-sm">Apply Now</a>
+          </div>
+          <div class="job-item" data-reveal>
+            <div class="job-info">
+              <h4>Fleet Operations Coordinator</h4>
+              <div class="job-meta">
+                <span class="job-tag"><i class="fas fa-map-marker-alt"></i> Melbourne, VIC</span>
+                <span class="job-tag"><i class="fas fa-clock"></i> Full-time</span>
+                <span class="job-tag" style="background:#fef3c7;color:#92400e">Operations</span>
+              </div>
+            </div>
+            <a href="contact.html" class="btn btn-primary btn-sm">Apply Now</a>
+          </div>
+          <div class="job-item" data-reveal>
+            <div class="job-info">
+              <h4>Account Manager – Commercial Clients</h4>
+              <div class="job-meta">
+                <span class="job-tag"><i class="fas fa-map-marker-alt"></i> Brisbane, QLD</span>
+                <span class="job-tag"><i class="fas fa-clock"></i> Full-time</span>
+                <span class="job-tag" style="background:#f3e8ff;color:#7e22ce">Sales</span>
+              </div>
+            </div>
+            <a href="contact.html" class="btn btn-primary btn-sm">Apply Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-banner" aria-labelledby="about-cta-heading">
+      <div class="container cta-content">
+        <h2 id="about-cta-heading">Ready to Work With Us?</h2>
+        <p>Contact our team to discuss how EcoTrack can help your business achieve its sustainability goals.</p>
+        <div class="cta-buttons">
+          <a href="contact.html" class="btn btn-primary btn-lg"><i class="fas fa-envelope"></i> Get In Touch</a>
+          <a href="services.html" class="btn btn-outline-white btn-lg"><i class="fas fa-cogs"></i> Our Services</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="navbar-logo">
+            <div class="logo-icon">♻</div>
+            <div class="logo-text">
+              <span class="logo-name">EcoTrack</span>
+              <span class="logo-tagline">Waste &amp; Recycling</span>
+            </div>
+          </a>
+          <p class="footer-desc">Smart, sustainable waste management solutions for forward-thinking businesses.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul class="footer-links">
+            <li><a href="services.html">Commercial Bins</a></li>
+            <li><a href="services.html">Recycling Programs</a></li>
+            <li><a href="services.html">Bulk Collection</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <div class="footer-contact">
+            <div class="footer-contact-item"><i class="fas fa-phone"></i><span>+1 (800) 326-8722</span></div>
+            <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>info@ecotrack.example.com</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 EcoTrack Waste Management. All rights reserved.</p>
+        <p><a href="#">Privacy Policy</a> &bull; <a href="#">Terms</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

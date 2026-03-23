@@ -1,0 +1,114 @@
+/* ============================================================
+   ECOTRACK - Dark Mode Styles
+   ============================================================ */
+
+[data-theme="dark"] {
+  --bg-primary: #0d1117;
+  --bg-secondary: #111827;
+  --bg-tertiary: #161b22;
+  --bg-card: #1c2430;
+
+  --text-primary: #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+
+  --border-color: #30363d;
+  --border-light: #21262d;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.4);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.5);
+}
+
+[data-theme="dark"] .navbar {
+  background: rgba(10,15,25,0.98);
+  border-bottom-color: rgba(255,255,255,0.06);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.45);
+}
+
+[data-theme="dark"] .hero-float-card {
+  background: rgba(28,36,48,0.97);
+  border: 1px solid #30363d;
+}
+
+[data-theme="dark"] .float-info .title { color: #f0f6fc; }
+
+[data-theme="dark"] .theme-toggle {
+  background: #21262d;
+  border-color: #30363d;
+  color: #8b949e;
+}
+
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .service-card,
+[data-theme="dark"] .testimonial-card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .data-table-wrapper,
+[data-theme="dark"] .card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .feature-card:hover,
+[data-theme="dark"] .service-card:hover,
+[data-theme="dark"] .testimonial-card:hover {
+  border-color: var(--primary);
+}
+
+[data-theme="dark"] .sidebar {
+  background: var(--bg-card);
+  border-right-color: var(--border-color);
+}
+
+[data-theme="dark"] .data-table th {
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .data-table tr:hover td {
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .form-control {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-control:focus {
+  background: var(--bg-card);
+}
+
+[data-theme="dark"] .search-input {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .stats-strip {
+  background: #052e16;
+}
+
+[data-theme="dark"] .page-header::after {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .footer {
+  background: #060b08;
+}
+
+[data-theme="dark"] .chart-placeholder {
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .step-number {
+  background: var(--bg-card);
+}
+
+[data-theme="dark"] .toast {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .logo-name { color: #f0f6fc; }

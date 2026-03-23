@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact EcoTrack for waste management solutions, quotes, and support. Reach us by phone, email, or visit our office." />
+  <title>Contact Us – EcoTrack Waste Management & Recycling</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="../assets/css/rtl.css" />
+
+  <style>
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .contact-info-cards { display: flex; flex-direction: column; gap: 16px; }
+    .contact-info-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      transition: var(--transition);
+    }
+    .contact-info-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary-light); }
+    .contact-info-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    .contact-info-body h4 { font-size: 1rem; margin-bottom: 4px; }
+    .contact-info-body p { font-size: 0.875rem; line-height: 1.6; }
+    .contact-info-body a { color: var(--primary); font-weight: 500; }
+
+    .contact-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .contact-tag-select {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .ctag {
+      padding: 8px 16px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+    }
+    .ctag.selected, .ctag:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* Map placeholder */
+    .map-wrapper {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      height: 380px;
+      background: var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+    .map-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+    }
+    .map-placeholder i { font-size: 3rem; color: var(--primary); }
+    .map-placeholder h4 { font-size: 1.1rem; color: var(--text-primary); }
+    .map-placeholder p { font-size: 0.875rem; text-align: center; max-width: 280px; }
+
+    .office-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+    .office-card {
+      padding: 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      transition: var(--transition);
+    }
+    .office-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary-light); }
+    .office-card h4 { font-size: 1rem; margin-bottom: 6px; }
+    .office-card .city { font-size: 0.75rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .office-card p { font-size: 0.875rem; line-height: 1.7; }
+
+    @media (max-width: 1024px) {
+      .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+      .office-cards { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .contact-form-card { padding: 28px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .office-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="navbar-logo">
+        <div class="logo-icon">♻</div>
+        <div class="logo-text">
+          <span class="logo-name">EcoTrack</span>
+          <span class="logo-tagline">Waste &amp; Recycling</span>
+        </div>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="blog.html" class="nav-link">Blog</a></li>
+        <li><a href="contact.html" class="nav-link active">Contact</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+        <button class="rtl-toggle" title="Toggle RTL layout" aria-label="Toggle right-to-left layout">RTL</button>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm"><i class="fas fa-chart-bar"></i> Dashboard</a>
+        <a href="login.html" class="btn btn-outline-primary btn-sm"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="signup.html" class="btn btn-secondary btn-sm nav-signup-link"><i class="fas fa-user-plus"></i> Sign Up</a>
+        <a href="schedule.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-check"></i> Schedule Pickup</a>
+        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <header class="page-header">
+      <div class="container">
+        <span class="badge badge-primary" style="margin-bottom:16px"><i class="fas fa-envelope"></i> Get In Touch</span>
+        <h1>Contact EcoTrack</h1>
+        <p>Have a question or ready to start? Our team is standing by to help you find the right waste management solution.</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span><i class="fas fa-chevron-right" style="font-size:0.7rem"></i></span>
+          <span class="current" aria-current="page">Contact</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- CONTACT MAIN -->
+    <section class="section-padding" aria-labelledby="contact-heading">
+      <div class="container">
+        <div class="contact-layout">
+          <!-- Info Side -->
+          <div>
+            <span class="section-label" data-reveal><i class="fas fa-info-circle"></i> Contact Information</span>
+            <h2 class="section-title" id="contact-heading" data-reveal style="margin-bottom:8px">We'd Love to<br />Hear From You</h2>
+            <p style="margin-bottom:28px" data-reveal>Whether you need a quote, have a service question, or want to discuss a custom solution — reach us through any channel below.</p>
+
+            <div class="contact-info-cards">
+              <div class="contact-info-card" data-reveal data-reveal-delay="0">
+                <div class="contact-info-icon"><i class="fas fa-phone-alt"></i></div>
+                <div class="contact-info-body">
+                  <h4>Phone</h4>
+                  <p><a href="tel:+914023456789">+91 40 2345 6789</a></p>
+                  <p>Mon–Fri: 9AM – 6PM | Sat: 10AM – 2PM</p>
+                </div>
+              </div>
+              <div class="contact-info-card" data-reveal data-reveal-delay="100">
+                <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                <div class="contact-info-body">
+                  <h4>Email</h4>
+                  <p><a href="mailto:info@ecotrack.example.com">info@ecotrack.example.com</a></p>
+                  <p><a href="mailto:support@ecotrack.example.com">support@ecotrack.example.com</a></p>
+                </div>
+              </div>
+              <div class="contact-info-card" data-reveal data-reveal-delay="200">
+                <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="contact-info-body">
+                  <h4>Head Office</h4>
+                  <p>Plot No. 42, EcoHub Tech Park, Madhapur<br />Hyderabad, Telangana 500081, India</p>
+                </div>
+              </div>
+              <div class="contact-info-card" data-reveal data-reveal-delay="300">
+                <div class="contact-info-icon"><i class="fas fa-headset"></i></div>
+                <div class="contact-info-body">
+                  <h4>Emergency Support</h4>
+                  <p>24/7 emergency line for active clients:</p>
+                  <p><a href="tel:+919876543210">+91 98765 43210</a></p>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:28px" data-reveal>
+              <h4 style="font-size:0.9rem;margin-bottom:14px;color:var(--text-secondary)">Follow Us</h4>
+              <div style="display:flex;gap:10px">
+                <a href="#" class="social-btn" style="width:44px;height:44px" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-btn" style="width:44px;height:44px" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                <a href="#" class="social-btn" style="width:44px;height:44px" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-btn" style="width:44px;height:44px" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Side -->
+          <div class="contact-form-card" data-reveal data-reveal-delay="100">
+            <h3 style="font-size:1.4rem;margin-bottom:8px">Send Us a Message</h3>
+            <p style="margin-bottom:28px;font-size:0.9rem">We typically respond within 2 business hours.</p>
+
+            <div style="margin-bottom:24px">
+              <p class="form-label" style="margin-bottom:10px">What can we help with?</p>
+              <div class="contact-tag-select">
+                <span class="ctag selected" tabindex="0">General Enquiry</span>
+                <span class="ctag" tabindex="0">Get a Quote</span>
+                <span class="ctag" tabindex="0">Service Issue</span>
+                <span class="ctag" tabindex="0">Partnership</span>
+                <span class="ctag" tabindex="0">Careers</span>
+              </div>
+            </div>
+
+            <form id="contact-form" novalidate aria-label="Contact form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="first-name">First Name <span style="color:var(--danger)">*</span></label>
+                  <input type="text" id="first-name" class="form-control" placeholder="John" data-validate="required" autocomplete="given-name" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="last-name">Last Name <span style="color:var(--danger)">*</span></label>
+                  <input type="text" id="last-name" class="form-control" placeholder="Smith" data-validate="required" autocomplete="family-name" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="email">Email Address <span style="color:var(--danger)">*</span></label>
+                  <input type="email" id="email" class="form-control" placeholder="john@company.com" data-validate="required email" autocomplete="email" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="phone">Phone Number</label>
+                  <input type="tel" id="phone" class="form-control" placeholder="+1 (555) 000-0000" data-validate="phone" autocomplete="tel" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="company">Company Name</label>
+                  <input type="text" id="company" class="form-control" placeholder="Your Company Ltd." autocomplete="organization" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="service">Service Interest</label>
+                  <select id="service" class="form-control">
+                    <option value="">Select a service...</option>
+                    <option>Commercial Bin Service</option>
+                    <option>Recycling Program</option>
+                    <option>Bulk/Skip Bin</option>
+                    <option>Hazardous Waste</option>
+                    <option>Green/Organic Waste</option>
+                    <option>Enterprise Solution</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="message">Message <span style="color:var(--danger)">*</span></label>
+                <textarea id="message" class="form-control" placeholder="Tell us about your waste management needs, volume, location, and any specific requirements..." data-validate="required minlength:20"></textarea>
+              </div>
+
+              <div class="form-group" style="display:flex;align-items:flex-start;gap:10px">
+                <input type="checkbox" id="privacy" style="margin-top:3px;width:16px;height:16px;cursor:pointer;accent-color:var(--primary)" />
+                <label for="privacy" style="font-size:0.875rem;color:var(--text-secondary);cursor:pointer;line-height:1.5">
+                  I agree to the <a href="#" style="color:var(--primary)">Privacy Policy</a> and consent to EcoTrack processing my data to respond to this inquiry.
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">
+                <i class="fas fa-paper-plane"></i> Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="section-padding-sm services-bg" aria-labelledby="location-heading">
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <span class="section-label"><i class="fas fa-map"></i> Find Us</span>
+          <h2 class="section-title" id="location-heading">Our Locations</h2>
+        </div>
+
+        <div class="map-wrapper" style="margin-top:40px" data-reveal>
+          <div class="map-placeholder">
+            <i class="fas fa-map-marker-alt"></i>
+            <h4>Interactive Map</h4>
+            <p>Google Maps integration point. Replace with your Google Maps embed or API key to display full interactive map.</p>
+            <a href="https://maps.google.com/?q=Madhapur,Hyderabad,Telangana,India" class="btn btn-primary btn-sm" target="_blank" rel="noopener noreferrer">
+              <i class="fas fa-external-link-alt"></i> Open in Google Maps
+            </a>
+          </div>
+        </div>
+
+        <div class="office-cards">
+          <div class="office-card" data-reveal>
+            <div class="city">Headquarters</div>
+            <h4>Hyderabad</h4>
+            <p>Plot No. 42, EcoHub Tech Park<br />Madhapur, Hyderabad, Telangana 500081<br /><br />+91 40 2345 6789<br />hyderabad@ecotrack.example.com</p>
+          </div>
+          <div class="office-card" data-reveal data-reveal-delay="100">
+            <div class="city">Regional Office</div>
+            <h4>Warangal</h4>
+            <p>18 Green Economy Nagar<br />Hanamkonda, Warangal, Telangana 506001<br /><br />+91 87654 32109<br />warangal@ecotrack.example.com</p>
+          </div>
+          <div class="office-card" data-reveal data-reveal-delay="200">
+            <div class="city">Regional Office</div>
+            <h4>Karimnagar</h4>
+            <p>7 Sustainability Road<br />Karimnagar, Telangana 505001<br /><br />+91 76543 21098<br />karimnagar@ecotrack.example.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="navbar-logo">
+            <div class="logo-icon">♻</div>
+            <div class="logo-text">
+              <span class="logo-name">EcoTrack</span>
+              <span class="logo-tagline">Waste &amp; Recycling</span>
+            </div>
+          </a>
+          <p class="footer-desc">Smart, sustainable waste management solutions for forward-thinking businesses.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul class="footer-links">
+            <li><a href="services.html">Commercial Bins</a></li>
+            <li><a href="services.html">Recycling Programs</a></li>
+            <li><a href="services.html">Bulk Collection</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <div class="footer-contact">
+            <div class="footer-contact-item"><i class="fas fa-phone"></i><span>+91 40 2345 6789</span></div>
+            <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>info@ecotrack.example.com</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 EcoTrack Waste Management. All rights reserved.</p>
+        <p><a href="#">Privacy Policy</a> &bull; <a href="#">Terms</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    // Topic tag selector
+    document.querySelectorAll('.ctag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        document.querySelectorAll('.ctag').forEach(t => t.classList.remove('selected'));
+        tag.classList.add('selected');
+      });
+      tag.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tag.click(); }
+      });
+    });
+  </script>
+</body>
+</html>

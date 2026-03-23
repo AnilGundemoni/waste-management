@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EcoTrack Blog – Insights on sustainable waste management, recycling tips, environmental news and industry best practices." />
+  <title>Blog – EcoTrack Waste Management</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="../assets/css/rtl.css" />
+  <style>
+    /* Blog-specific styles */
+    .blog-layout { display: grid; grid-template-columns: 1fr 340px; gap: 40px; }
+    .blog-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+    .filter-pill {
+      padding: 8px 20px; border-radius: var(--radius-full);
+      border: 1.5px solid var(--border-color); background: var(--bg-card);
+      color: var(--text-secondary); font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; transition: var(--transition); font-family: var(--font-primary);
+    }
+    .filter-pill.active, .filter-pill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .blog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .blog-card {
+      background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); overflow: hidden; transition: var(--transition);
+    }
+    .blog-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .blog-card-img { position: relative; height: 200px; overflow: hidden; }
+    .blog-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .blog-card:hover .blog-card-img img { transform: scale(1.05); }
+    .blog-category-badge {
+      position: absolute; top: 12px; left: 12px;
+      padding: 4px 12px; border-radius: var(--radius-full);
+      font-size: 0.75rem; font-weight: 700; background: var(--primary); color: #fff;
+    }
+    .blog-card-body { padding: 20px; }
+    .blog-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; font-size: 0.8rem; color: var(--text-muted); }
+    .blog-card-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; line-height: 1.4; }
+    .blog-card-title a { color: inherit; text-decoration: none; }
+    .blog-card-title a:hover { color: var(--primary); }
+    .blog-excerpt { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .blog-card-footer { padding: 16px 20px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+    .blog-author { display: flex; align-items: center; gap: 8px; }
+    .blog-author img { width: 28px; height: 28px; border-radius: 50%; }
+    .blog-author-name { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
+    .read-time { font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+
+    /* Featured article */
+    .blog-featured {
+      background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 32px;
+      display: grid; grid-template-columns: 1.2fr 1fr;
+    }
+    .blog-featured-img { height: 100%; min-height: 320px; }
+    .blog-featured-img img { width: 100%; height: 100%; object-fit: cover; }
+    .blog-featured-body { padding: 36px; display: flex; flex-direction: column; justify-content: center; }
+    .featured-tag { display: inline-block; padding: 4px 12px; border-radius: var(--radius-full); background: #dcfce7; color: var(--primary); font-size: 0.75rem; font-weight: 700; margin-bottom: 14px; }
+
+    /* Sidebar */
+    .blog-sidebar { display: block; }
+    .sidebar-widget { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+    .sidebar-widget-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid var(--primary); }
+    .sidebar-post { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+    .sidebar-post:last-child { border-bottom: none; }
+    .sidebar-post img { width: 64px; height: 64px; border-radius: var(--radius-sm); object-fit: cover; flex-shrink: 0; }
+    .sidebar-post-title { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 4px; }
+    .sidebar-post-title a { color: inherit; text-decoration: none; }
+    .sidebar-post-title a:hover { color: var(--primary); }
+    .sidebar-post-date { font-size: 0.75rem; color: var(--text-muted); }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag-pill {
+      padding: 5px 14px; border-radius: var(--radius-full);
+      background: var(--bg-secondary); border: 1px solid var(--border-color);
+      font-size: 0.8rem; color: var(--text-secondary); cursor: pointer; transition: var(--transition);
+      text-decoration: none;
+    }
+    .tag-pill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .newsletter-sidebar input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); margin-bottom: 10px; font-family: var(--font-primary); font-size: 0.875rem; }
+    .pagination { display: flex; align-items: center; gap: 6px; margin-top: 36px; }
+    .page-btn {
+      width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid var(--border-color); border-radius: var(--radius-md);
+      cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);
+      transition: var(--transition); background: var(--bg-card); text-decoration: none;
+    }
+    .page-btn.active, .page-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    @media (max-width: 1024px) { .blog-layout { grid-template-columns: 1fr; } .blog-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; } }
+    @media (max-width: 768px) { .blog-grid { grid-template-columns: 1fr; } .blog-featured { grid-template-columns: 1fr; } .blog-featured-img { min-height: 200px; } .blog-sidebar { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="navbar-logo" aria-label="EcoTrack Home">
+        <div class="logo-icon" aria-hidden="true">♻</div>
+        <div class="logo-text">
+          <span class="logo-name">EcoTrack</span>
+          <span class="logo-tagline">Waste &amp; Recycling</span>
+        </div>
+      </a>
+      <ul class="nav-menu" role="menubar">
+        <li role="none"><a href="../index.html" class="nav-link" role="menuitem">Home</a></li>
+        <li role="none" class="nav-dropdown">
+          <a href="services.html" class="nav-link" role="menuitem" aria-haspopup="true">
+            Services <i class="fas fa-chevron-down nav-chevron"></i>
+          </a>
+          <div class="nav-dropdown-menu" role="menu">
+            <a href="services.html#commercial" class="nav-dropdown-item" role="menuitem"><i class="fas fa-building"></i> Commercial Bins</a>
+            <a href="services.html#recycling" class="nav-dropdown-item" role="menuitem"><i class="fas fa-recycle"></i> Recycling Programs</a>
+            <a href="services.html#bulk" class="nav-dropdown-item" role="menuitem"><i class="fas fa-truck"></i> Bulk Collection</a>
+            <a href="services.html#hazardous" class="nav-dropdown-item" role="menuitem"><i class="fas fa-biohazard"></i> Hazardous Waste</a>
+          </div>
+        </li>
+        <li role="none"><a href="about.html" class="nav-link" role="menuitem">About Us</a></li>
+        <li role="none"><a href="blog.html" class="nav-link active" role="menuitem">Blog</a></li>
+        <li role="none"><a href="contact.html" class="nav-link" role="menuitem">Contact</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+        <button class="rtl-toggle" title="Toggle RTL layout" aria-label="Toggle right-to-left layout">RTL</button>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm"><i class="fas fa-chart-bar"></i> Dashboard</a>
+        <a href="login.html" class="btn btn-outline-primary btn-sm"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="signup.html" class="btn btn-secondary btn-sm nav-signup-link"><i class="fas fa-user-plus"></i> Sign Up</a>
+        <a href="schedule.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-check"></i> Schedule Pickup</a>
+        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header" role="banner">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Blog</span>
+      </nav>
+      <h1 class="page-header-title">Insights & Resources</h1>
+      <p class="page-header-subtitle">Industry insights, recycling tips, environmental news and sustainability best practices from our waste management experts.</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="section-padding" role="main">
+    <div class="container">
+      <div class="blog-layout">
+        <!-- Left: Articles -->
+        <div>
+          <!-- Category filters -->
+          <div class="blog-filters" role="group" aria-label="Filter by category">
+            <button class="filter-pill active">All Articles</button>
+            <button class="filter-pill">Recycling Tips</button>
+            <button class="filter-pill">Industry News</button>
+            <button class="filter-pill">Sustainability</button>
+            <button class="filter-pill">Business Waste</button>
+            <button class="filter-pill">Green Tech</button>
+          </div>
+
+          <!-- Featured Article -->
+          <div class="blog-featured" data-reveal>
+            <div class="blog-featured-img">
+              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Australia's 2030 Recycling Target" loading="lazy" />
+            </div>
+            <div class="blog-featured-body">
+              <span class="featured-tag"><i class="fas fa-star"></i> Featured</span>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                <span class="blog-category-badge" style="position:static">Industry News</span>
+              </div>
+              <h2 style="font-size:1.5rem;font-weight:800;color:var(--text-primary);line-height:1.3;margin-bottom:14px">
+                Australia's 2030 Recycling Target: Where Are We Now?
+              </h2>
+              <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:20px">
+                Australia set an ambitious target to recycle 80% of all waste by 2030. With five years to go, we break down the numbers, the challenges, and what businesses can do right now to help the nation reach this milestone goal.
+              </p>
+              <div class="blog-meta">
+                <span><i class="fas fa-user"></i> Dr. Sarah Thompson</span>
+                <span><i class="fas fa-calendar"></i> March 10, 2026</span>
+                <span><i class="fas fa-clock"></i> 8 min read</span>
+              </div>
+              <a href="#" class="btn btn-primary" style="margin-top:16px;display:inline-flex;align-items:center;gap:8px">Read Article <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+
+          <!-- Article Grid -->
+          <div class="blog-grid">
+            <!-- Card 1 -->
+            <div class="blog-card" data-reveal>
+              <div class="blog-card-img">
+                <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600&q=80" alt="5 Ways to Cut Commercial Waste" loading="lazy" />
+                <span class="blog-category-badge">Business Waste</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-meta">
+                  <span><i class="fas fa-calendar"></i> Mar 8, 2026</span>
+                  <span><i class="fas fa-clock"></i> 5 min read</span>
+                </div>
+                <div class="blog-card-title"><a href="#">5 Proven Ways to Cut Your Business Waste Costs by 40%</a></div>
+                <p class="blog-excerpt">Waste removal is one of the fastest-growing overhead costs for Australian businesses. Here are data-driven strategies our enterprise clients use to slash their bin costs dramatically.</p>
+              </div>
+              <div class="blog-card-footer">
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/28?img=11" alt="James Liu" />
+                  <span class="blog-author-name">James Liu</span>
+                </div>
+                <span class="read-time"><i class="fas fa-eye"></i> 2.4k views</span>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="blog-card" data-reveal data-reveal-delay="100">
+              <div class="blog-card-img">
+                <img src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=600&q=80" alt="Organic Waste Guide" loading="lazy" />
+                <span class="blog-category-badge" style="background:var(--secondary)">Recycling Tips</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-meta">
+                  <span><i class="fas fa-calendar"></i> Mar 5, 2026</span>
+                  <span><i class="fas fa-clock"></i> 6 min read</span>
+                </div>
+                <div class="blog-card-title"><a href="#">The Ultimate Guide to Organic Waste Composting for Businesses</a></div>
+                <p class="blog-excerpt">Organic waste makes up 35% of business waste streams. Learn how restaurants, hotels, and office canteens can convert food waste into compost and reduce disposal bills.</p>
+              </div>
+              <div class="blog-card-footer">
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/28?img=21" alt="Emma Carter" />
+                  <span class="blog-author-name">Emma Carter</span>
+                </div>
+                <span class="read-time"><i class="fas fa-eye"></i> 1.8k views</span>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="blog-card" data-reveal>
+              <div class="blog-card-img">
+                <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=80" alt="E-waste Recycling" loading="lazy" />
+                <span class="blog-category-badge" style="background:#3b82f6">Green Tech</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-meta">
+                  <span><i class="fas fa-calendar"></i> Feb 28, 2026</span>
+                  <span><i class="fas fa-clock"></i> 7 min read</span>
+                </div>
+                <div class="blog-card-title"><a href="#">Why E-Waste Is Australia's Fastest Growing Waste Stream</a></div>
+                <p class="blog-excerpt">Australians discard 20 million electronic devices every year. With critical metals inside reaching landfill, responsible e-waste recycling is no longer optional — it's urgent.</p>
+              </div>
+              <div class="blog-card-footer">
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/28?img=32" alt="Mark Singh" />
+                  <span class="blog-author-name">Mark Singh</span>
+                </div>
+                <span class="read-time"><i class="fas fa-eye"></i> 3.1k views</span>
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="blog-card" data-reveal data-reveal-delay="100">
+              <div class="blog-card-img">
+                <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80" alt="Circular Economy" loading="lazy" />
+                <span class="blog-category-badge" style="background:#0f766e">Sustainability</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-meta">
+                  <span><i class="fas fa-calendar"></i> Feb 20, 2026</span>
+                  <span><i class="fas fa-clock"></i> 9 min read</span>
+                </div>
+                <div class="blog-card-title"><a href="#">Building a Circular Economy: How EcoTrack Clients Lead the Way</a></div>
+                <p class="blog-excerpt">Three EcoTrack enterprise clients share how transitioning to a circular economy model not only reduced their environmental footprint but also improved their bottom line.</p>
+              </div>
+              <div class="blog-card-footer">
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/28?img=44" alt="Dr. Sarah Thompson" />
+                  <span class="blog-author-name">Dr. Sarah Thompson</span>
+                </div>
+                <span class="read-time"><i class="fas fa-eye"></i> 4.2k views</span>
+              </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="blog-card" data-reveal>
+              <div class="blog-card-img">
+                <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600&q=80" alt="Recycling Myths" loading="lazy" />
+                <span class="blog-category-badge" style="background:var(--secondary)">Recycling Tips</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-meta">
+                  <span><i class="fas fa-calendar"></i> Feb 14, 2026</span>
+                  <span><i class="fas fa-clock"></i> 4 min read</span>
+                </div>
+                <div class="blog-card-title"><a href="#">10 Recycling Myths Your Team Probably Believes (Debunked)</a></div>
+                <p class="blog-excerpt">Contamination is the #1 reason recycling fails. Our waste educators bust the most common myths holding Australians back from recycling correctly and effectively.</p>
+              </div>
+              <div class="blog-card-footer">
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/28?img=51" alt="Priya Nair" />
+                  <span class="blog-author-name">Priya Nair</span>
+                </div>
+                <span class="read-time"><i class="fas fa-eye"></i> 5.7k views</span>
+              </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="blog-card" data-reveal data-reveal-delay="100">
+              <div class="blog-card-img">
+                <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80" alt="Net Zero Roadmap" loading="lazy" />
+                <span class="blog-category-badge" style="background:#f59e0b">Industry News</span>
+              </div>
+              <div class="blog-card-body">
+                <div class="blog-meta">
+                  <span><i class="fas fa-calendar"></i> Feb 7, 2026</span>
+                  <span><i class="fas fa-clock"></i> 6 min read</span>
+                </div>
+                <div class="blog-card-title"><a href="#">Net Zero by 2050: The Role of Waste Management in Your Roadmap</a></div>
+                <p class="blog-excerpt">Scope 3 emissions from waste streams are often overlooked in corporate net-zero commitments. Here's how proper waste management and reporting can close that gap.</p>
+              </div>
+              <div class="blog-card-footer">
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/28?img=60" alt="James Liu" />
+                  <span class="blog-author-name">James Liu</span>
+                </div>
+                <span class="read-time"><i class="fas fa-eye"></i> 2.9k views</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination" role="navigation" aria-label="Blog pagination">
+            <a href="#" class="page-btn" aria-label="Previous"><i class="fas fa-chevron-left"></i></a>
+            <a href="#" class="page-btn active">1</a>
+            <a href="#" class="page-btn">2</a>
+            <a href="#" class="page-btn">3</a>
+            <span style="color:var(--text-muted);padding:0 4px">...</span>
+            <a href="#" class="page-btn">8</a>
+            <a href="#" class="page-btn" aria-label="Next"><i class="fas fa-chevron-right"></i></a>
+          </div>
+        </div>
+
+        <!-- Right: Sidebar -->
+        <aside class="blog-sidebar" aria-label="Blog sidebar">
+          <!-- Search -->
+          <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title">Search Articles</h3>
+            <div style="position:relative">
+              <input type="text" placeholder="Search the blog..." style="width:100%;padding:10px 40px 10px 14px;border:1.5px solid var(--border-color);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font-primary);font-size:0.875rem" aria-label="Search articles" />
+              <button style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--primary);cursor:pointer" aria-label="Submit search"><i class="fas fa-search"></i></button>
+            </div>
+          </div>
+
+          <!-- Recent Posts -->
+          <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title">Recent Articles</h3>
+            <div class="sidebar-post">
+              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=64&q=60" alt="Article thumbnail" loading="lazy" />
+              <div>
+                <div class="sidebar-post-title"><a href="#">Australia's 2030 Recycling Target: Where Are We Now?</a></div>
+                <div class="sidebar-post-date">March 10, 2026</div>
+              </div>
+            </div>
+            <div class="sidebar-post">
+              <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=64&q=60" alt="Article thumbnail" loading="lazy" />
+              <div>
+                <div class="sidebar-post-title"><a href="#">5 Proven Ways to Cut Your Business Waste Costs</a></div>
+                <div class="sidebar-post-date">March 8, 2026</div>
+              </div>
+            </div>
+            <div class="sidebar-post">
+              <img src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=64&q=60" alt="Article thumbnail" loading="lazy" />
+              <div>
+                <div class="sidebar-post-title"><a href="#">The Ultimate Guide to Organic Waste Composting</a></div>
+                <div class="sidebar-post-date">March 5, 2026</div>
+              </div>
+            </div>
+            <div class="sidebar-post">
+              <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=64&q=60" alt="Article thumbnail" loading="lazy" />
+              <div>
+                <div class="sidebar-post-title"><a href="#">Why E-Waste Is Australia's Fastest Growing Waste Stream</a></div>
+                <div class="sidebar-post-date">Feb 28, 2026</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categories -->
+          <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title">Categories</h3>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);cursor:pointer">
+                <span style="font-size:0.875rem;color:var(--text-secondary)"><i class="fas fa-recycle" style="color:var(--primary);margin-right:8px;width:16px"></i>Recycling Tips</span>
+                <span style="font-size:0.8rem;background:var(--bg-secondary);padding:2px 8px;border-radius:var(--radius-full);color:var(--text-muted)">14</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);cursor:pointer">
+                <span style="font-size:0.875rem;color:var(--text-secondary)"><i class="fas fa-newspaper" style="color:var(--primary);margin-right:8px;width:16px"></i>Industry News</span>
+                <span style="font-size:0.8rem;background:var(--bg-secondary);padding:2px 8px;border-radius:var(--radius-full);color:var(--text-muted)">21</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);cursor:pointer">
+                <span style="font-size:0.875rem;color:var(--text-secondary)"><i class="fas fa-leaf" style="color:var(--primary);margin-right:8px;width:16px"></i>Sustainability</span>
+                <span style="font-size:0.8rem;background:var(--bg-secondary);padding:2px 8px;border-radius:var(--radius-full);color:var(--text-muted)">18</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);cursor:pointer">
+                <span style="font-size:0.875rem;color:var(--text-secondary)"><i class="fas fa-building" style="color:var(--primary);margin-right:8px;width:16px"></i>Business Waste</span>
+                <span style="font-size:0.8rem;background:var(--bg-secondary);padding:2px 8px;border-radius:var(--radius-full);color:var(--text-muted)">9</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;cursor:pointer">
+                <span style="font-size:0.875rem;color:var(--text-secondary)"><i class="fas fa-microchip" style="color:var(--primary);margin-right:8px;width:16px"></i>Green Tech</span>
+                <span style="font-size:0.8rem;background:var(--bg-secondary);padding:2px 8px;border-radius:var(--radius-full);color:var(--text-muted)">11</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tag Cloud -->
+          <div class="sidebar-widget">
+            <h3 class="sidebar-widget-title">Popular Tags</h3>
+            <div class="tag-cloud">
+              <a href="#" class="tag-pill">recycling</a>
+              <a href="#" class="tag-pill">sustainability</a>
+              <a href="#" class="tag-pill">e-waste</a>
+              <a href="#" class="tag-pill">circular economy</a>
+              <a href="#" class="tag-pill">zero waste</a>
+              <a href="#" class="tag-pill">composting</a>
+              <a href="#" class="tag-pill">net zero</a>
+              <a href="#" class="tag-pill">plastic</a>
+              <a href="#" class="tag-pill">food waste</a>
+              <a href="#" class="tag-pill">green tech</a>
+              <a href="#" class="tag-pill">carbon</a>
+              <a href="#" class="tag-pill">ESG</a>
+            </div>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="sidebar-widget" style="background:linear-gradient(135deg,#166534,#0f766e);border:none">
+            <h3 class="sidebar-widget-title" style="color:#fff;border-bottom-color:rgba(255,255,255,0.3)">Get Eco Updates</h3>
+            <p style="font-size:0.875rem;color:rgba(255,255,255,0.85);margin-bottom:16px;line-height:1.6">Join 5,000+ sustainability leaders. Weekly insights to your inbox, zero spam.</p>
+            <input type="email" placeholder="Your email address" class="newsletter-sidebar" style="border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.15);color:#fff" aria-label="Email for newsletter" />
+            <button class="btn" style="width:100%;background:#fff;color:var(--primary);font-weight:700">Subscribe Free</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="navbar-logo" style="margin-bottom:16px">
+            <div class="logo-icon">♻</div>
+            <div class="logo-text">
+              <span class="logo-name">EcoTrack</span>
+              <span class="logo-tagline">Waste &amp; Recycling</span>
+            </div>
+          </a>
+          <p class="footer-desc">Australia's most trusted partner for sustainable commercial waste management and recycling solutions.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+            <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul class="footer-links">
+            <li><a href="services.html#commercial">Commercial Bins</a></li>
+            <li><a href="services.html#recycling">Recycling</a></li>
+            <li><a href="services.html#bulk">Bulk &amp; Skip</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <div class="footer-contact">
+            <div class="footer-contact-item"><i class="fas fa-phone"></i><span>+1 (800) 326-8722</span></div>
+            <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>info@ecotrack.example.com</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 EcoTrack Waste Management. All rights reserved.</p>
+        <p><a href="#">Privacy Policy</a> &bull; <a href="#">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    // Filter pills interactivity
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', function () {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Explore EcoTrack's full range of waste management and recycling services: commercial bins, recycling programs, bulk collection, hazardous waste, and more." />
+  <title>Services – EcoTrack Waste Management & Recycling</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♻️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="../assets/css/rtl.css" />
+
+  <style>
+    /* Services filter tabs */
+    .services-tabs { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px; }
+    .tab-btn {
+      padding: 10px 22px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-primary);
+      min-height: 44px;
+    }
+    .tab-btn:hover, .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* Service detail layout */
+    .service-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .service-detail:last-of-type { border-bottom: none; }
+    .service-detail:nth-child(even) .service-detail-img { order: 2; }
+    .service-detail:nth-child(even) .service-detail-text { order: 1; }
+
+    .service-detail-img { border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-xl); }
+    .service-detail-img img { width: 100%; height: 420px; object-fit: cover; }
+
+    .service-num { font-size: 5rem; font-weight: 800; color: var(--primary-light); font-family: var(--font-heading); line-height: 1; margin-bottom: 8px; }
+    .service-detail-text h2 { font-size: 2rem; margin-bottom: 16px; }
+    .service-feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0 32px; }
+    .service-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      padding: 10px 12px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+    }
+    .service-feature-item i { color: var(--primary); font-size: 0.85rem; }
+
+    /* Bin size selector */
+    .bin-sizes { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
+    .bin-card {
+      flex: 1;
+      min-width: 100px;
+      text-align: center;
+      padding: 20px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--bg-card);
+    }
+    .bin-card:hover, .bin-card.selected { border-color: var(--primary); background: var(--bg-secondary); }
+    .bin-card .bin-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+    .bin-card .bin-size { font-weight: 700; font-size: 0.95rem; color: var(--text-primary); }
+    .bin-card .bin-type { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* FAQ */
+    .faq-section { background: var(--bg-secondary); }
+    .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      gap: 16px;
+    }
+    .faq-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .faq-answer { padding: 0 24px; }
+    .faq-answer p { padding: 0 0 20px; font-size: 0.9rem; line-height: 1.75; }
+
+    /* Compare table */
+    .compare-table-wrapper {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th {
+      padding: 16px 24px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+    .compare-table th:first-child { background: var(--bg-tertiary); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+    .compare-table td { padding: 14px 24px; border-bottom: 1px solid var(--border-light); font-size: 0.9rem; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: var(--bg-tertiary); }
+    .check { color: var(--success); font-size: 1rem; }
+    .cross { color: var(--danger); font-size: 1rem; }
+
+    @media (max-width: 1024px) {
+      .service-detail { grid-template-columns: 1fr; gap: 36px; }
+      .service-detail:nth-child(even) .service-detail-img { order: -1; }
+      .service-detail:nth-child(even) .service-detail-text { order: 0; }
+    }
+    @media (max-width: 640px) {
+      .service-feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="navbar-logo">
+        <div class="logo-icon">♻</div>
+        <div class="logo-text">
+          <span class="logo-name">EcoTrack</span>
+          <span class="logo-tagline">Waste &amp; Recycling</span>
+        </div>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link active">Services</a></li>
+        <li><a href="about.html" class="nav-link">About Us</a></li>
+        <li><a href="blog.html" class="nav-link">Blog</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+        <button class="rtl-toggle" title="Toggle RTL layout" aria-label="Toggle right-to-left layout">RTL</button>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm"><i class="fas fa-chart-bar"></i> Dashboard</a>
+        <a href="login.html" class="btn btn-outline-primary btn-sm"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="signup.html" class="btn btn-secondary btn-sm nav-signup-link"><i class="fas fa-user-plus"></i> Sign Up</a>
+        <a href="schedule.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-check"></i> Schedule Pickup</a>
+        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+      <div class="container">
+        <span class="badge badge-primary" style="margin-bottom:16px"><i class="fas fa-cogs"></i> What We Offer</span>
+        <h1>Our Waste Management Services</h1>
+        <p>Comprehensive, eco-certified solutions covering every waste stream for businesses of all sizes.</p>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span><i class="fas fa-chevron-right" style="font-size:0.7rem"></i></span>
+          <span class="current" aria-current="page">Services</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- SERVICES FILTER -->
+    <section class="section-padding">
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <span class="section-label"><i class="fas fa-filter"></i> Filter Services</span>
+          <h2 class="section-title">Find the Right Solution</h2>
+          <p class="section-subtitle">From everyday commercial waste to specialized industrial streams—we cover it all.</p>
+        </div>
+
+        <div class="services-tabs" role="tablist">
+          <button class="tab-btn active" role="tab" aria-selected="true">All Services</button>
+          <button class="tab-btn" role="tab">Commercial</button>
+          <button class="tab-btn" role="tab">Recycling</button>
+          <button class="tab-btn" role="tab">Industrial</button>
+          <button class="tab-btn" role="tab">Residential</button>
+          <button class="tab-btn" role="tab">Specialist</button>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-cards" style="margin-bottom:48px">
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-value">12+</div>
+                <div class="stat-card-label">Service Categories</div>
+              </div>
+              <div class="stat-card-icon green"><i class="fas fa-list"></i></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-value">98%</div>
+                <div class="stat-card-label">Diversion from Landfill</div>
+              </div>
+              <div class="stat-card-icon blue"><i class="fas fa-recycle"></i></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-value">24/7</div>
+                <div class="stat-card-label">Emergency Response</div>
+              </div>
+              <div class="stat-card-icon amber"><i class="fas fa-clock"></i></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-value">ISO</div>
+                <div class="stat-card-label">14001 Certified</div>
+              </div>
+              <div class="stat-card-icon green"><i class="fas fa-certificate"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERVICE DETAILS -->
+        <div id="commercial" class="service-detail" data-reveal>
+          <div class="service-detail-img">
+            <img
+              src="https://images.unsplash.com/photo-1589891810072-7525455df97c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fExpY2Vuc2VkJTIwV2FzdGUlMjBDYXJyaWVyfGVufDB8fDB8fHww"
+              alt="Row of commercial waste bins at industrial facility ready for collection"
+              loading="lazy"
+            />
+          </div>
+          <div class="service-detail-text">
+            <div class="service-num">01</div>
+            <span class="section-label"><i class="fas fa-building"></i> Commercial</span>
+            <h2>Commercial Bin Services</h2>
+            <p>Flexible bin hire and collection for offices, retail centers, restaurants, hotels, and industrial facilities. From daily to monthly schedules — we design service around your operational needs.</p>
+
+            <h4 style="margin:20px 0 12px;font-size:1rem">Select Bin Size:</h4>
+            <div class="bin-sizes">
+              <div class="bin-card selected">
+                <span class="bin-icon">🗑️</span>
+                <div class="bin-size">120L</div>
+                <div class="bin-type">Small Office</div>
+              </div>
+              <div class="bin-card">
+                <span class="bin-icon">🗑️</span>
+                <div class="bin-size">240L</div>
+                <div class="bin-type">Retail</div>
+              </div>
+              <div class="bin-card">
+                <span class="bin-icon">🗑️</span>
+                <div class="bin-size">660L</div>
+                <div class="bin-type">Restaurant</div>
+              </div>
+              <div class="bin-card">
+                <span class="bin-icon">🗑️</span>
+                <div class="bin-size">1100L</div>
+                <div class="bin-type">Industrial</div>
+              </div>
+            </div>
+
+            <div class="service-feature-grid">
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Flexible scheduling</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Online portal access</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Multi-site management</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Monthly reporting</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Bin sanitization</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Odor control options</div>
+            </div>
+            <a href="schedule.html" class="btn btn-primary btn-lg"><i class="fas fa-calendar-plus"></i> Book This Service</a>
+          </div>
+        </div>
+
+        <div id="recycling" class="service-detail" data-reveal>
+          <div class="service-detail-text">
+            <div class="service-num">02</div>
+            <span class="section-label"><i class="fas fa-recycle"></i> Recycling</span>
+            <h2>Recycling Solutions</h2>
+            <p>Maximize your recycling rates with our comprehensive single-stream and source-separated programs. We handle paper, cardboard, plastics, metals, glass, and electronic waste — then provide certified diversion reports.</p>
+            <div class="service-feature-grid">
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Paper & cardboard</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Plastics (1-7)</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Metal & aluminium</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Glass containers</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> E-waste recycling</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> ISO-certified reports</div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <a href="schedule.html" class="btn btn-primary btn-lg"><i class="fas fa-calendar-plus"></i> Book This Service</a>
+              <a href="contact.html" class="btn btn-secondary btn-lg"><i class="fas fa-file-alt"></i> Get Report Sample</a>
+            </div>
+          </div>
+          <div class="service-detail-img">
+            <img
+              src="https://media.istockphoto.com/id/1179506238/photo/bales-of-compressed-recyclable-materials-stacked-outdoors.webp?a=1&b=1&s=612x612&w=0&k=20&c=vdvjYBKYEPHqqSGwL0sATZqSW0-w2Nef09re7d08qI8="
+              alt="Color-coded recycling bins sorting different materials at processing facility"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <div id="bulk" class="service-detail" data-reveal>
+          <div class="service-detail-img">
+            <img
+              src="https://images.unsplash.com/photo-1767369327984-d83a0ffe4bda?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjN8fHdhc3RlJTIwY29sbGVjdGlvbiUyMHRyb2xsZXklMjBpbWFnZXN8ZW58MHx8MHx8fDA%3D"
+              alt="Large waste truck and skip bin at construction site for bulk collection"
+              loading="lazy"
+            />
+          </div>
+          <div class="service-detail-text">
+            <div class="service-num">03</div>
+            <span class="section-label"><i class="fas fa-truck"></i> Bulk Collection</span>
+            <h2>Bulk & Skip Bin Services</h2>
+            <p>On-demand skip bins for renovations, construction sites, events, office cleanouts, and large-scale disposal jobs. Available in multiple sizes with same-day delivery in major metro areas.</p>
+            <div class="service-feature-grid">
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> 2m³ to 30m³ skip bins</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Same-day delivery</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Construction debris</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Event waste mgmt.</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Site cleanouts</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Compactor services</div>
+            </div>
+            <a href="schedule.html" class="btn btn-primary btn-lg"><i class="fas fa-calendar-plus"></i> Book a Skip Bin</a>
+          </div>
+        </div>
+
+        <div id="hazardous" class="service-detail" data-reveal>
+          <div class="service-detail-text">
+            <div class="service-num">04</div>
+            <span class="section-label"><i class="fas fa-biohazard"></i> Hazardous Waste</span>
+            <h2>Hazardous Waste Management</h2>
+            <p>Compliant collection, packaging, transport, and disposal of hazardous materials including chemical waste, medical waste, batteries, oils, and solvents. All services fully licensed and documented.</p>
+            <div class="service-feature-grid">
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Chemical waste</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Medical & sharps</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Used oils & solvents</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Battery recycling</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Waste manifests</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Regulatory compliance</div>
+            </div>
+            <a href="contact.html" class="btn btn-primary btn-lg"><i class="fas fa-phone"></i> Contact for Assessment</a>
+          </div>
+          <div class="service-detail-img">
+            <img
+              src="https://plus.unsplash.com/premium_photo-1663090499721-c10bd6b4ca37?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8SGF6YXJkb3VzJTIwV2FzdGUlMjBNYW5hZ2VtZW50fGVufDB8fDB8fHww"
+              alt="Hazardous waste containers being handled by certified technicians in protective gear"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <div id="green" class="service-detail" data-reveal>
+          <div class="service-detail-img">
+            <img
+              src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80"
+              alt="Green garden waste collection – lawn clippings and prunings ready for composting"
+              loading="lazy"
+            />
+          </div>
+          <div class="service-detail-text">
+            <div class="service-num">05</div>
+            <span class="section-label"><i class="fas fa-seedling"></i> Green & Organic</span>
+            <h2>Green Waste & Organics</h2>
+            <p>Sustainable collection of garden waste, food organics, and compostable materials. All material is processed at certified composting facilities, producing valuable soil amendments.</p>
+            <div class="service-feature-grid">
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Garden clippings</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Food organics (FOGO)</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Tree pruning & mulch</div>
+              <div class="service-feature-item"><i class="fas fa-check-circle"></i> Compost end-product</div>
+            </div>
+            <a href="schedule.html" class="btn btn-primary btn-lg"><i class="fas fa-calendar-plus"></i> Book This Service</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICE COMPARISON TABLE -->
+    <section class="section-padding services-bg" aria-labelledby="compare-heading">
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <span class="section-label"><i class="fas fa-table"></i> Compare Plans</span>
+          <h2 class="section-title" id="compare-heading">Service Plan Comparison</h2>
+        </div>
+        <div class="compare-table-wrapper" style="margin-top:40px" data-reveal>
+          <table class="compare-table" aria-label="Service plan comparison">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Starter</th>
+                <th>Business</th>
+                <th>Enterprise</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Number of bins managed</td><td>Up to 5</td><td>Up to 25</td><td>Unlimited</td></tr>
+              <tr><td>Collection frequency</td><td>Weekly</td><td>Flexible</td><td>Custom</td></tr>
+              <tr><td>Client portal access</td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-check check"></i></td></tr>
+              <tr><td>Real-time bin monitoring</td><td><i class="fas fa-times cross"></i></td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-check check"></i></td></tr>
+              <tr><td>Route optimization</td><td><i class="fas fa-times cross"></i></td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-check check"></i></td></tr>
+              <tr><td>Monthly analytics report</td><td>Basic</td><td>Full</td><td>Custom</td></tr>
+              <tr><td>Recycling compliance cert.</td><td><i class="fas fa-times cross"></i></td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-check check"></i></td></tr>
+              <tr><td>Dedicated account manager</td><td><i class="fas fa-times cross"></i></td><td><i class="fas fa-times cross"></i></td><td><i class="fas fa-check check"></i></td></tr>
+              <tr><td>API & system integrations</td><td><i class="fas fa-times cross"></i></td><td><i class="fas fa-times cross"></i></td><td><i class="fas fa-check check"></i></td></tr>
+              <tr><td>24/7 emergency support</td><td><i class="fas fa-times cross"></i></td><td><i class="fas fa-check check"></i></td><td><i class="fas fa-check check"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-center" style="margin-top:32px">
+          <a href="contact.html" class="btn btn-primary btn-lg"><i class="fas fa-phone"></i> Get Custom Quote</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section-padding faq-section" aria-labelledby="faq-heading">
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <span class="section-label"><i class="fas fa-question-circle"></i> FAQ</span>
+          <h2 class="section-title" id="faq-heading">Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-list" style="margin-top:40px">
+          <div class="faq-item" data-reveal>
+            <div class="faq-question">
+              How quickly can service begin after signing up?
+              <div class="faq-icon"><i class="fas fa-plus"></i></div>
+            </div>
+            <div class="faq-answer"><p>We can typically deploy bins and begin service within 3–5 business days for most commercial locations. Enterprise clients requiring site assessments may take 7–10 business days.</p></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <div class="faq-question">
+              What bins sizes are available for hire?
+              <div class="faq-icon"><i class="fas fa-plus"></i></div>
+            </div>
+            <div class="faq-answer"><p>We offer bins from 120L (small office) to 1100L (industrial) for regular collection, and skip bins from 2m³ to 30m³ for bulk/on-demand jobs. Our team will recommend the right size during your site assessment.</p></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <div class="faq-question">
+              Do you provide recycling compliance certificates?
+              <div class="faq-icon"><i class="fas fa-plus"></i></div>
+            </div>
+            <div class="faq-answer"><p>Yes. Business and Enterprise plan clients receive monthly certified diversion reports suitable for ISO audits, ESG reporting, and regulatory compliance submissions.</p></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <div class="faq-question">
+              Can I manage multiple business sites from one account?
+              <div class="faq-icon"><i class="fas fa-plus"></i></div>
+            </div>
+            <div class="faq-answer"><p>Absolutely. Our client portal supports multi-site management with individual site dashboards, consolidated billing, and a single analytics view across all locations.</p></div>
+          </div>
+          <div class="faq-item" data-reveal>
+            <div class="faq-question">
+              How does the IoT bin monitoring work?
+              <div class="faq-icon"><i class="fas fa-plus"></i></div>
+            </div>
+            <div class="faq-answer"><p>We fit ultrasonic sensors inside your bins that measure fill levels in real-time. Data is sent to our platform every 30 minutes. You receive automatic alerts when bins reach 80% capacity, and our system uses this data to optimize your pickup schedule.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-banner">
+      <div class="container cta-content">
+        <h2>Ready to Get Started?</h2>
+        <p>Schedule a free site assessment or request a custom quote. No obligations, no setup fees.</p>
+        <div class="cta-buttons">
+          <a href="schedule.html" class="btn btn-primary btn-lg"><i class="fas fa-calendar-plus"></i> Book Free Assessment</a>
+          <a href="contact.html" class="btn btn-outline-white btn-lg"><i class="fas fa-phone"></i> Talk to Sales</a>
+          <a href="coming-soon.html" class="btn btn-secondary btn-lg"><i class="fas fa-plus-circle"></i> More Services</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../index.html" class="navbar-logo">
+            <div class="logo-icon">♻</div>
+            <div class="logo-text">
+              <span class="logo-name">EcoTrack</span>
+              <span class="logo-tagline">Waste &amp; Recycling</span>
+            </div>
+          </a>
+          <p class="footer-desc">Smart, sustainable waste management solutions for forward-thinking businesses.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul class="footer-links">
+            <li><a href="#commercial">Commercial Bins</a></li>
+            <li><a href="#recycling">Recycling Programs</a></li>
+            <li><a href="#bulk">Bulk Collection</a></li>
+            <li><a href="#hazardous">Hazardous Waste</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <div class="footer-contact">
+            <div class="footer-contact-item"><i class="fas fa-phone"></i><span>+1 (800) 326-8722</span></div>
+            <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>info@ecotrack.example.com</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 EcoTrack Waste Management. All rights reserved.</p>
+        <p><a href="#">Privacy Policy</a> &bull; <a href="#">Terms</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    // Bin size selector
+    document.querySelectorAll('.bin-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.closest('.bin-sizes').querySelectorAll('.bin-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+      });
+    });
+
+    // Tab buttons (visual only)
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+      });
+    });
+  </script>
+</body>
+</html>
